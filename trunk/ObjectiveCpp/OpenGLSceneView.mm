@@ -17,8 +17,6 @@ const float maxDistance = 1000.0f;
 
 NSOpenGLPixelFormat *globalPixelFormat = nil;
 NSOpenGLContext *globalGLContext = nil;
-ShaderProgram *globalNormalShader = nil;
-ShaderProgram *globalFlippedShader = nil;
 
 @implementation OpenGLSceneView
 
@@ -52,32 +50,10 @@ ShaderProgram *globalFlippedShader = nil;
 	return globalGLContext;
 }
 
-+ (ShaderProgram *)normalShader
-{
-	if (!globalNormalShader)
-	{
-		globalNormalShader = [[ShaderProgram alloc] init];
-		[globalNormalShader attachShaderWithType:GL_VERTEX_SHADER resourceInBundle:@"twoSidedLighting"];
-	}
-	return globalNormalShader;
-}
-
-+ (ShaderProgram *)flippedShader
-{
-	if (!globalFlippedShader)
-	{
-		globalFlippedShader = [[ShaderProgram alloc] init];
-		[globalFlippedShader attachShaderWithType:GL_VERTEX_SHADER resourceInBundle:@"twoSidedLightingFlipped"];
-	}
-	return globalFlippedShader;
-}
-
 + (void)deinitialize
 {
 	[globalGLContext release];
 	[globalPixelFormat release];
-	[globalNormalShader release];
-	[globalFlippedShader release];
 }
 
 - (void)awakeFromNib
@@ -109,9 +85,10 @@ ShaderProgram *globalFlippedShader = nil;
 		[[self openGLContext] makeCurrentContext];
 		
 		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
 		glShadeModel(GL_SMOOTH);
-		
+				
 		selectionOffset = new Vector3D();
 		isManipulating = NO;
 		isSelecting = NO;
@@ -135,10 +112,6 @@ ShaderProgram *globalFlippedShader = nil;
 		
 		cameraMode = CameraModePerspective;
 		viewMode = ViewModeSolid;
-		
-		glEnable(GL_VERTEX_PROGRAM_TWO_SIDE);
-		[[OpenGLSceneView normalShader] linkProgram];
-		[[OpenGLSceneView flippedShader] linkProgram];
 	}
 	return self;
 }
@@ -328,10 +301,7 @@ ShaderProgram *globalFlippedShader = nil;
 }
 
 - (void)drawManipulatedAndDisplayed
-{
-	[Mesh setNormalShader:[OpenGLSceneView normalShader]];
-	[Mesh setFlippedShader:[OpenGLSceneView flippedShader]];
-	
+{	
 	if (displayed != manipulated)
 		[displayed drawWithMode:viewMode];
 	[manipulated drawWithMode:viewMode];
@@ -404,13 +374,17 @@ ShaderProgram *globalFlippedShader = nil;
 	glClearColor(clearColor, clearColor, clearColor, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
 	
 	[self setupViewportAndCamera];
 
 	[self drawGridWithSize:10 step:2];
 	
+	glEnable(GL_LIGHTING);
+	
 	[self drawManipulatedAndDisplayed];
 	
+	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

@@ -23,6 +23,7 @@ using namespace std;
 #import "btIDebugDraw.h"
 #import "btDefaultMotionState.h"
 #import "GL_ShapeDrawerClone.h"
+#import "btSerializer.h"
 using namespace bParse;
 
 class Transform
@@ -69,8 +70,8 @@ public:
 	vector<Transform> *transforms;
 }
 
-@property (readonly, assign) btDynamicsWorld *dynamicsWorld;
-
 - (id)initWithFileName:(NSString *)fileName;
+- (void)stepSimulationWithTimeInterval:(NSTimeInterval)timeInterval;
+- (void)saveWithFileName:(NSString *)fileName;
 
 @end

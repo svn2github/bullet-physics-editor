@@ -10,8 +10,6 @@
 
 @implementation ExperimentalBulletWrapper
 
-@synthesize dynamicsWorld;
-
 - (id)initWithFileName:(NSString *)fileName
 {
 	self = [super init];
@@ -59,6 +57,33 @@
 	delete selection;
 	delete transforms;
 	[super dealloc];	
+}
+
+- (void)stepSimulationWithTimeInterval:(NSTimeInterval)timeInterval
+{
+	dynamicsWorld->stepSimulation(timeInterval);
+	for (int i = 0; i < dynamicsWorld->getNumCollisionObjects(); i++)
+	{
+		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[i];
+		btVector3 pos = colObj->getWorldTransform().getOrigin();
+		btQuaternion quat = colObj->getWorldTransform().getRotation();
+		transforms->at(i) = Transform(pos, quat);
+	}
+}
+
+- (void)saveWithFileName:(NSString *)fileName
+{
+	//create a large enough buffer. There is no method to pre-calculate the buffer size yet.
+	int maxSerializeBufferSize = 1024 * 1024 * 5;
+	
+	btDefaultSerializer *serializer = new btDefaultSerializer(maxSerializeBufferSize);
+	dynamicsWorld->serialize(serializer);
+	
+	FILE *file = fopen([fileName cStringUsingEncoding:NSASCIIStringEncoding], "wb");
+	fwrite(serializer->getBufferPointer(), serializer->getCurrentBufferSize(), 1, file);
+	fclose(file);
+	
+	delete serializer;
 }
 
 #pragma mark OpenGLManipulatingModel implementation

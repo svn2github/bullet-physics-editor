@@ -12,9 +12,6 @@
 #import "OpenGLSelecting.h"
 #import "Manipulator.h"
 #import "OpenGLManipulating.h"
-#import "Shader.h"
-#import "ShaderProgram.h"
-#import "Mesh.h"
 
 @class OpenGLSceneView;
 
