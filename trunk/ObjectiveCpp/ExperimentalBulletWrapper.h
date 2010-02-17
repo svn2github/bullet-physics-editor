@@ -57,6 +57,51 @@ public:
 	}
 };
 
+class BulletDebugDraw : public btIDebugDraw
+{
+private:
+	DebugDrawModes debugDrawMode;
+public:
+	BulletDebugDraw() 
+	{
+		debugDrawMode = DBG_MAX_DEBUG_DRAW_MODE;
+	}
+	
+	virtual void	drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
+	{
+		glColor3f(color.x(), color.y(), color.z());
+		glBegin(GL_LINES);
+		glVertex3f(from.x(), from.y(), from.z());
+		glVertex3f(to.x(), to.y(), to.z());
+		glEnd();
+	}
+	
+	virtual void	drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color)
+	{
+		// ignored
+	}
+	
+	virtual void	reportErrorWarning(const char* warningString) 
+	{
+		NSLog(@"Warning from Bullet: %s", warningString);
+	}
+	
+	virtual void	draw3dText(const btVector3& location,const char* textString) 
+	{
+		// ignored
+	}
+	
+	virtual void	setDebugMode(int debugMode)
+	{
+		debugDrawMode = (DebugDrawModes)debugMode;
+	}
+	
+	virtual int		getDebugMode() const
+	{
+		return debugDrawMode;
+	}
+};
+
 @interface ExperimentalBulletWrapper : NSObject <OpenGLManipulatingModelItem>
 {
 	btDefaultCollisionConfiguration *collisionConfiguration;
@@ -66,6 +111,7 @@ public:
 	btDynamicsWorld *dynamicsWorld;
 	btBulletWorldImporter *worldImporter;
 	GL_ShapeDrawer *shapeDrawer;
+	BulletDebugDraw *debugDrawer; 
 	vector<BOOL> *selection;
 	vector<Transform> *transforms;
 }

@@ -24,6 +24,7 @@
 
 - (void)willSelect;
 - (void)didSelect;
+- (void)drawWithMode:(enum ViewMode)mode;
 
 @end
 

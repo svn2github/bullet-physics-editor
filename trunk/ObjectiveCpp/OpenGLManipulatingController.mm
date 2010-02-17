@@ -495,10 +495,20 @@
 {
 	glPushMatrix();
 	glMultMatrixf(modelTransform->m);
-	for (uint i = 0; i < [model count]; i++)
+	
+	id aModel = model;
+	if ([aModel respondsToSelector:@selector(drawWithMode:)])
 	{
-		[model drawAtIndex:i forSelection:NO withMode:mode];
+		[model drawWithMode:mode];
 	}
+	else
+	{
+		for (uint i = 0; i < [model count]; i++)
+		{
+			[model drawAtIndex:i forSelection:NO withMode:mode];
+		}
+	}
+
 	glPopMatrix();
 }
 

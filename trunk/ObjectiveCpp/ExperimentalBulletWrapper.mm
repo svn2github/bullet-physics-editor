@@ -23,6 +23,8 @@
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 		dynamicsWorld->setGravity(btVector3(0, -10, 0));	
 		worldImporter = new btBulletWorldImporter(dynamicsWorld);
+		debugDrawer = new BulletDebugDraw();
+		dynamicsWorld->setDebugDrawer(debugDrawer);
 		shapeDrawer = new GL_ShapeDrawer();
 		selection = new vector<BOOL>();
 		transforms = new vector<Transform>();
@@ -56,6 +58,8 @@
 	delete worldImporter;
 	delete selection;
 	delete transforms;
+	delete debugDrawer;
+	delete shapeDrawer;
 	[super dealloc];	
 }
 
@@ -86,7 +90,33 @@
 	delete serializer;
 }
 
+- (void)debugDraw
+{
+	dynamicsWorld->debugDrawWorld();
+}
+
 #pragma mark OpenGLManipulatingModel implementation
+
+- (void)drawWithMode:(enum ViewMode)mode
+{
+	switch (mode) 
+	{
+		case ViewModeSolid:
+		{
+			for (uint i = 0; i < [self count]; i++)
+			{
+				[self drawAtIndex:i forSelection:NO withMode:mode];
+			}
+		} break;
+		case ViewModeWireframe:
+		{
+			glDisable(GL_LIGHTING);
+			[self debugDraw];
+		} break;
+		default:
+			break;
+	}
+}
 
 - (void)drawAtIndex:(uint)index forSelection:(BOOL)forSelection withMode:(enum ViewMode)mode
 {
