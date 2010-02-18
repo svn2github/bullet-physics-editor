@@ -593,5 +593,10 @@
 	[self updateSelection];
 }
 
+- (NSString *)nameAtIndex:(uint)index
+{
+	return [model nameAtIndex:index];
+}
+
 @end
 

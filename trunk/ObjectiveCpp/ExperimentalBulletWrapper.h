@@ -113,7 +113,7 @@ public:
 	GL_ShapeDrawer *shapeDrawer;
 	BulletDebugDraw *debugDrawer; 
 	vector<BOOL> *selection;
-	vector<Transform> *transforms;
+	vector<Transform> *transforms;	
 }
 
 - (id)initWithFileName:(NSString *)fileName;

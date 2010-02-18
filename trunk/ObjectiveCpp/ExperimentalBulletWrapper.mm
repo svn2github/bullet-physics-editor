@@ -266,4 +266,9 @@
 	// ignored
 }
 
+- (NSString *)nameAtIndex:(uint)index
+{
+	return [NSString stringWithFormat:@"Collision Object %i", index];
+}
+
 @end

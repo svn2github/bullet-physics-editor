@@ -32,6 +32,8 @@
 	PropertyReflector *propertyReflector;
 	IBOutlet NSTableView *propertyView;
 	
+	IBOutlet NSTableView *objectView;
+	
 	ExperimentalBulletWrapper *bulletWrapper;
 	BOOL simulationRunning;
 	OpenGLManipulatingController *bulletController;

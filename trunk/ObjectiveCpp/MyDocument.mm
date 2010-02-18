@@ -81,6 +81,8 @@
 	
 	propertyReflector = [[PropertyReflector alloc] initWithTableView:propertyView];
 	[propertyReflector setReflectedObject:self];
+	
+	[objectView setDataSource:self];
 }
 
 - (id<OpenGLManipulating>)manipulated
@@ -295,6 +297,19 @@
 - (IBAction)pause:(id)sender
 {
 	simulationRunning = NO;
+}
+
+#pragma mark TableViewDataSource
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn 
+			row:(NSInteger)rowIndex
+{
+	return [bulletWrapper nameAtIndex:(uint)rowIndex];
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	return [bulletWrapper count];
 }
 
 - (NSString *)windowNibName
