@@ -532,7 +532,7 @@ NSOpenGLContext *globalGLContext = nil;
 		isSelecting = NO;
 		OpenGLSelectionMode selectionMode = OpenGLSelectionModeAdd;
 		
-		if ([e modifierFlags] & NSControlKeyMask)
+		if (([e modifierFlags] & NSControlKeyMask) || ([e modifierFlags] & NSCommandKeyMask))
 			selectionMode = OpenGLSelectionModeInvert;
 		else if ([e modifierFlags] & NSShiftKeyMask)
 			selectionMode = OpenGLSelectionModeAdd;
