@@ -40,6 +40,7 @@
 	if (bulletWrapper && simulationRunning)
 	{
 		[bulletWrapper stepSimulationWithTimeInterval:[theTimer timeInterval]];
+		[bulletController updateSelection];
 		for (OpenGLSceneView *view in views)
 			[view setNeedsDisplay:YES];
 	}

@@ -22,7 +22,7 @@
 		solver = new btSequentialImpulseConstraintSolver();
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 		dynamicsWorld->setGravity(btVector3(0, -10, 0));	
-		worldImporter = new btBulletWorldImporter(dynamicsWorld);
+		worldImporter = new ExperimentalWorldImporter(dynamicsWorld);
 		debugDrawer = new BulletDebugDraw();
 		dynamicsWorld->setDebugDrawer(debugDrawer);
 		shapeDrawer = new GL_ShapeDrawer();
@@ -207,12 +207,18 @@
 
 - (Vector3D)positionAtIndex:(uint)index
 {
-	return transforms->at(index).position;
+	//return transforms->at(index).position;
+	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+	btVector3 origin = colObj->getWorldTransform().getOrigin();
+	return Vector3D(origin.x(), origin.y(), origin.z());
 }
 
 - (Quaternion)rotationAtIndex:(uint)index
 {
-	return transforms->at(index).rotation;
+	//return transforms->at(index).rotation;
+	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+	btQuaternion rotation = colObj->getWorldTransform().getRotation();
+	return Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
 }
 
 - (Vector3D)scaleAtIndex:(uint)index
@@ -222,24 +228,24 @@
 
 - (void)setPosition:(Vector3D)position atIndex:(uint)index
 {
-	Transform &transform = transforms->at(index);
-	transform.position = position;
+	//Transform &transform = transforms->at(index);
+	//transform.position = position;
 	//Matrix4x4 m = transform.ToMatrix();
 	
 	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 	//colObj->getWorldTransform().setFromOpenGLMatrix(m.m);
-	colObj->getWorldTransform().setOrigin(transform.ToBulletVector3());
+	colObj->getWorldTransform().setOrigin(btVector3(position.x, position.y, position.z));
 }
 
 - (void)setRotation:(Quaternion)rotation atIndex:(uint)index
 {
-	Transform &transform = transforms->at(index);
-	transform.rotation = rotation;
+	//Transform &transform = transforms->at(index);
+	//transform.rotation = rotation;
 	//Matrix4x4 m = transform.ToMatrix();
 	
 	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 	//colObj->getWorldTransform().setFromOpenGLMatrix(m.m);
-	colObj->getWorldTransform().setRotation(transform.ToBulletQuaternion());
+	colObj->getWorldTransform().setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
 }
 
 - (void)setScale:(Vector3D)scale atIndex:(uint)index
@@ -268,7 +274,8 @@
 
 - (NSString *)nameAtIndex:(uint)index
 {
-	return [NSString stringWithFormat:@"Collision Object %i", index];
+	string name = worldImporter->bodiesNames.at(index);
+	return [NSString stringWithCString:name.c_str() encoding:NSASCIIStringEncoding];
 }
 
 @end

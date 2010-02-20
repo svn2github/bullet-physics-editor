@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <OpenGL/OpenGL.h>
 #import <vector>
+#import <string>
 using namespace std;
 #import "OpenGLManipulatingModel.h"
 
@@ -102,6 +103,28 @@ public:
 	}
 };
 
+class ExperimentalWorldImporter : public btBulletWorldImporter
+{
+public:
+	vector<string> bodiesNames;
+	
+	ExperimentalWorldImporter(btDynamicsWorld *world) : btBulletWorldImporter(world)
+	{
+		
+	}
+	
+	virtual btRigidBody*  createRigidBody(bool isDynamic, 
+										  btScalar mass, 
+										  const btTransform& startTransform,
+										  btCollisionShape* shape,const char* bodyName)
+	{
+		NSLog(@"Created Rigid Body: %s", bodyName);
+		bodiesNames.push_back(bodyName);
+		return btBulletWorldImporter::createRigidBody(isDynamic, mass, startTransform, shape, bodyName);
+	}
+	
+};
+
 @interface ExperimentalBulletWrapper : NSObject <OpenGLManipulatingModelItem>
 {
 	btDefaultCollisionConfiguration *collisionConfiguration;
@@ -109,7 +132,7 @@ public:
 	btDbvtBroadphase *broadphase;
 	btSequentialImpulseConstraintSolver *solver;
 	btDynamicsWorld *dynamicsWorld;
-	btBulletWorldImporter *worldImporter;
+	ExperimentalWorldImporter *worldImporter;
 	GL_ShapeDrawer *shapeDrawer;
 	BulletDebugDraw *debugDrawer; 
 	vector<BOOL> *selection;
