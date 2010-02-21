@@ -166,6 +166,16 @@ NSOpenGLContext *globalGLContext = nil;
 	[self setNeedsDisplay:YES];
 }
 
+- (Camera)camera
+{
+	return *camera;
+}
+
+- (void)setCamera:(Camera)aCamera
+{
+	*camera = aCamera;
+}
+
 - (enum CameraMode)cameraMode
 {
 	return cameraMode;

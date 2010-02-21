@@ -23,7 +23,7 @@
 		manipulationFinished = YES;
 		
 		views = [[NSMutableArray alloc] init];
-		oneView = NO;
+		oneView = nil;
 		bulletWrapper = nil;
 		[NSTimer scheduledTimerWithTimeInterval:1.0 / 60.0
 										 target:self
@@ -443,16 +443,31 @@ constrainSplitPosition:(CGFloat)proposedPosition
 	}
 }
 
+- (void)swapCamerasBetweenFirst:(OpenGLSceneView *)first second:(OpenGLSceneView *)second
+{
+	Camera firstCamera = [first camera];
+	Camera secondCamera = [second camera];
+	CameraMode firstMode = [first cameraMode];
+	CameraMode secondMode = [second cameraMode];
+	[second setCameraMode:firstMode];
+	[first setCameraMode:secondMode];
+	[second setCamera:firstCamera];
+	[first setCamera:secondCamera];
+}
+
 - (void)toggleOneViewFourView:(id)sender
 {
 	NSLog(@"toggleOneViewFourView");
 	
 	if (oneView)
 	{
-		[viewPerspective setCameraMode:CameraModePerspective];
+		if (oneView != viewPerspective)
+		{
+			[self swapCamerasBetweenFirst:oneView second:viewPerspective];
+		}
 		NSRect frame = [viewPerspective frame];
 		[[[mainSplit subviews] objectAtIndex:0] setFrame:frame];
-		oneView = NO;
+		oneView = nil;
 		return;
 	}
 	
@@ -465,13 +480,16 @@ constrainSplitPosition:(CGFloat)proposedPosition
 	{
 		if (view == hittedView)
 		{
-			oneView = YES;
+			oneView = view;
 			
 			[self collapseSplitView:topSplit];
 			[self collapseSplitView:bottomSplit];
 			[self collapseSplitView:mainSplit];
 			
-			[viewPerspective setCameraMode:[view cameraMode]];
+			if (oneView != viewPerspective)
+			{
+				[self swapCamerasBetweenFirst:oneView second:viewPerspective];
+			}
 			return;
 		}
 	}
