@@ -88,7 +88,10 @@ NSOpenGLContext *globalGLContext = nil;
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glShadeModel(GL_SMOOTH);
-				
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+		
+		glFrontFace(GL_CW);
+					
 		selectionOffset = new Vector3D();
 		isManipulating = NO;
 		isSelecting = NO;
@@ -674,7 +677,7 @@ NSOpenGLContext *globalGLContext = nil;
 	float deltaX = [e deltaX];
 	float deltaY = [e deltaY];
 	
-	if (([e modifierFlags] & (NSAlternateKeyMask | NSControlKeyMask)) == (NSAlternateKeyMask | NSControlKeyMask))
+	if (([e modifierFlags] & (NSAlternateKeyMask | NSCommandKeyMask)) == (NSAlternateKeyMask | NSCommandKeyMask))
 	{
 		NSRect bounds = [self bounds];
 		float w = bounds.size.width;
