@@ -19,5 +19,15 @@ namespace ManagedCpp
 		string native(nativeCharsPointer, chars->Length);
 		return native;
 	}
+
+	String^ ManagedString(string nativeString)
+	{
+		array<Byte> ^chars = gcnew array<Byte>(nativeString.length());
+		for (unsigned int i = 0; i < nativeString.length(); i++)
+		{
+			chars[i] = nativeString.at(i);
+		}
+		return Encoding::ASCII->GetString(chars);
+	}
 }
 

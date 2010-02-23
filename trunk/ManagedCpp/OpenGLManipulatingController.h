@@ -15,8 +15,9 @@
 #include "../PureCpp/MathCore/MathDeclaration.h"
 #include "OpenGLManipulating.h"
 #include "OpenGLManipulatingModel.h"
-#include "Item.h"
 
+using namespace System;
+using namespace System::ComponentModel;
 using namespace HotChocolate::Bindings;
 
 namespace ManagedCpp
@@ -126,8 +127,5 @@ namespace ManagedCpp
 		void WillChangeSelection();
 		void DidChangeSelection();
 		void SetTransform(Vector3D position, Quaternion rotation, Vector3D scale);
-
-		// needed for C#, can't consume native types
-		void SetTransform(Item ^item);
 	};
 }

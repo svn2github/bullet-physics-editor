@@ -17,4 +17,5 @@ using namespace System::Text;
 namespace ManagedCpp
 {
 	string NativeString(String ^managedString);
+	String^ ManagedString(string nativeString);
 }

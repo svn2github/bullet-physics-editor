@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../bullet;../bullet/src;../bullet/Extras/Serialize/BulletFileLoader"
-				PreprocessorDefinitions="WIN32;_DEBUG"
+				PreprocessorDefinitions="WIN32;_DEBUG;BT_MANAGED_CODE"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../bullet;../bullet/src;../bullet/Extras/Serialize/BulletFileLoader"
-				PreprocessorDefinitions="WIN32;NDEBUG"
+				PreprocessorDefinitions="WIN32;NDEBUG;BT_MANAGED_CODE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -311,38 +311,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\IndexedItem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\IndexedItem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Item.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Item.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ItemCollection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ItemCollection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ItemManipulationState.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ItemManipulationState.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Manipulator.cpp"
 				>
 			</File>
@@ -364,30 +332,6 @@
 			</File>
 			<File
 				RelativePath=".\MarshalHelpers.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Mesh.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Mesh.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MeshFullState.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MeshFullState.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MeshManipulationState.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MeshManipulationState.h"
 				>
 			</File>
 			<File

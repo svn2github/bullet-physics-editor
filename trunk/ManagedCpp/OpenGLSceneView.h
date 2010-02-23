@@ -14,7 +14,6 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace System::Diagnostics;
 
-#include "Mesh.h"
 #include "OpenGLManipulating.h"
 #include "Manipulator.h"
 

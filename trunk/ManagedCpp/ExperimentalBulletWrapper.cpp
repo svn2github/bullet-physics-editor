@@ -13,16 +13,29 @@ using namespace std;
 
 namespace ManagedCpp
 {
-	ExperimentalBulletWrapper::ExperimentalBulletWrapper(String ^fileName)
+	ExperimentalBulletWrapper::ExperimentalBulletWrapper()
 	{
-		string nativeFileName = NativeString(fileName);
 		wrapper = new BulletWrapperHelper();
+	}
+
+	void ExperimentalBulletWrapper::Load(String ^fileName)
+	{
+		delete wrapper;
+		wrapper = new BulletWrapperHelper();
+		
+		string nativeFileName = NativeString(fileName);
 		wrapper->LoadFile(nativeFileName.c_str());
 	}
 
 	void ExperimentalBulletWrapper::StepSimulation(btScalar timeStep)
 	{
 		wrapper->dynamicsWorld->stepSimulation(timeStep);
+	}
+
+	void ExperimentalBulletWrapper::Save(String ^fileName)
+	{
+		string nativeFileName = NativeString(fileName);
+		wrapper->Save(nativeFileName.c_str());
 	}
 
 	#pragma region OpenGLManipulatingModel implementation
@@ -99,6 +112,11 @@ namespace ManagedCpp
 	void ExperimentalBulletWrapper::ScaleBy(Vector3D offset, uint index)
 	{
 		// ignored
+	}
+
+	String ^ExperimentalBulletWrapper::GetName(uint index)
+	{
+		return ManagedString(wrapper->GetName(index));
 	}
 
 	#pragma endregion

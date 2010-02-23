@@ -17,24 +17,16 @@ namespace OpenGLEditorWindows
 {
     public partial class DocumentForm : Form, OpenGLSceneViewDelegate
     {
-        ItemCollection items;
-        OpenGLManipulatingController itemsController;
-        OpenGLManipulatingController meshController;
         UndoManager undo;
 
         PropertyObserver<float> observerSelectionX;
         PropertyObserver<float> observerSelectionY;
         PropertyObserver<float> observerSelectionZ;
 
-        bool manipulationFinished;
-        List<ItemManipulationState> oldManipulations;
-        MeshManipulationState oldMeshManipulation;
         List<OpenGLSceneView> views;
 
         string lastFileName = null;
-        string fileDialogFilter = "Bullet & Model3D|*.bullet;*.model3D" +
-                                  "|Native format (*.model3D)|*.model3D" +
-                                  "|Bullet (*.bullet)|*.bullet";
+        string fileDialogFilter = "Bullet (*.bullet)|*.bullet";
 
         OpenGLSceneView openGLSceneViewLeft = null;
         OpenGLSceneView openGLSceneViewTop = null;
@@ -67,10 +59,9 @@ namespace OpenGLEditorWindows
             if (this.DesignMode)
                 return;
 
-            items = new ItemCollection();
-            itemsController = new OpenGLManipulatingController();
-            meshController = new OpenGLManipulatingController();
             bulletController = new OpenGLManipulatingController();
+            bulletWrapper = new ExperimentalBulletWrapper();
+            bulletController.Model = bulletWrapper;
             undo = new UndoManager();
 
             fourViewDock = new DockFourViews();
@@ -107,33 +98,20 @@ namespace OpenGLEditorWindows
             openGLSceneViewFront.CurrentCameraMode = CameraMode.CameraModeFront;
             openGLSceneViewPerspective.CurrentCameraMode = CameraMode.CameraModePerspective;
 
-            itemsController.Model = items;
-
             OnEachViewDo(view => view.CurrentManipulator = ManipulatorType.ManipulatorTypeDefault);
 
-            itemsController.CurrentManipulator = openGLSceneViewLeft.CurrentManipulator;
+            bulletController.CurrentManipulator = openGLSceneViewLeft.CurrentManipulator;
 
             OnEachViewDo(view =>
                 {
-                    view.Displayed = view.Manipulated = itemsController;
+                    view.Displayed = view.Manipulated = bulletController;
                     view.TheDelegate = this;
                 });
-
-            textBoxX.Bind<float>("Number", this, "SelectionX");
-            textBoxY.Bind<float>("Number", this, "SelectionY");
-            textBoxZ.Bind<float>("Number", this, "SelectionZ");
-
-            BindSelectionXYZ(itemsController);
-            BindSelectionXYZ(meshController);
 
             observerSelectionX = this.ObserveProperty<float>("SelectionX");
             observerSelectionY = this.ObserveProperty<float>("SelectionY");
             observerSelectionZ = this.ObserveProperty<float>("SelectionZ");
-
-            manipulationFinished = true;
-            oldManipulations = null;
-            oldMeshManipulation = null;
-
+            
             undo.NeedsSaveChanged += new EventHandler(undo_NeedsSaveChanged);
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
 
@@ -150,7 +128,7 @@ namespace OpenGLEditorWindows
             dockPanel1.DockLeftPortion = 0.15;   // 15 percent of dock space
             dockPanel1.DockRightPortion = 0.15;  // 25 percent is default
 
-            Manipulated = itemsController;
+            Manipulated = bulletController;
             propertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid_PropertyValueChanged);
 
             simulationTimer = new Timer();
@@ -164,6 +142,7 @@ namespace OpenGLEditorWindows
             if (bulletWrapper != null)
             {
                 bulletWrapper.StepSimulation(1.0f / 60.0f);
+                bulletController.UpdateSelection();
                 OnEachViewDo(view => view.Invalidate());
             }
         }
@@ -350,82 +329,6 @@ namespace OpenGLEditorWindows
             }
         }
 
-        Mesh CurrentMesh
-        {
-            get { return meshController.Model as Mesh; }
-        }
-
-        private void EditMesh(MeshSelectionMode mode)
-        {
-            int index = itemsController.LastSelectedIndex;
-            if (index > -1)
-            {
-                Item item = items.GetItem((uint)index);
-                item.GetMesh().SelectionMode = mode;
-                meshController.Model = item.GetMesh();
-                meshController.SetTransform(item);
-                Manipulated = meshController;
-            }
-        }
-
-        private void EditItems()
-        {
-            Mesh mesh = CurrentMesh;
-            if (mesh != null)
-                mesh.SelectionMode = MeshSelectionMode.MeshSelectionModeVertices;
-
-            itemsController.Model = items;
-            itemsController.SetTransform(null);
-            Manipulated = itemsController;
-        }
-
-        private void ChangeEditMode(EditMode editMode)
-        {
-            switch (editMode)
-            {
-                case EditMode.EditModeItems:
-                    EditItems();
-                    break;
-                case EditMode.EditModeTriangles:
-                    EditMesh(MeshSelectionMode.MeshSelectionModeTriangles);
-                    break;
-                case EditMode.EditModeVertices:
-                    EditMesh(MeshSelectionMode.MeshSelectionModeVertices);
-                    break;
-                case EditMode.EditModeEdges:
-                    EditMesh(MeshSelectionMode.MeshSelectionModeEdges);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void AddItem(MeshType type, uint steps)
-        {
-            Item item = new Item();
-            item.GetMesh().MakeMesh(type, steps);
-
-            itemsController.ChangeSelection(0);
-            item.Selected = 1;
-            items.AddItem(item);
-            itemsController.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-
-            undo.PrepareUndo(string.Format("Add {0}", type.ToDisplayString()),
-                Invocation.Create(type, steps, RemoveItem));
-        }
-
-        private void RemoveItem(MeshType type, uint steps)
-        {
-            itemsController.ChangeSelection(0);
-            items.RemoveAt((int)items.Count - 1);
-            OnEachViewDo(view => view.Invalidate());
-
-            // simple test for undo/redo
-            undo.PrepareUndo(string.Format("Add {0}", type.ToDisplayString()),
-                Invocation.Create(type, steps, AddItem));
-        }
-
         private void btnSelect_Click(object sender, EventArgs e)
         {
             SetManipulator(ManipulatorType.ManipulatorTypeDefault);
@@ -446,32 +349,6 @@ namespace OpenGLEditorWindows
             SetManipulator(ManipulatorType.ManipulatorTypeScale);
         }
 
-        private void btnAddCube_Click(object sender, EventArgs e)
-        {
-            AddItem(MeshType.MeshTypeCube, 1);
-        }
-
-        private void AddItemDialog(MeshType type)
-        {
-            using (AddItemWithStepsDialog dlg = new AddItemWithStepsDialog())
-            {
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    AddItem(type, dlg.Steps);
-                }
-            }
-        }
-
-        private void btnAddCylinder_Click(object sender, EventArgs e)
-        {
-            AddItemDialog(MeshType.MeshTypeCylinder);
-        }
-
-        private void btnAddSphere_Click(object sender, EventArgs e)
-        {
-            AddItemDialog(MeshType.MeshTypeSphere);
-        }
-
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             undo.Undo();
@@ -482,125 +359,14 @@ namespace OpenGLEditorWindows
             undo.Redo();
         }
 
-        void SwapManipulations(List<ItemManipulationState> old,
-            List<ItemManipulationState> current)
-        {
-            Trace.WriteLine("swapManipulationsWithOld:current:");
-            Trace.Assert(old.Count == current.Count, "old.Count == current.Count");
-            items.CurrentManipulations = old;
-
-            undo.PrepareUndo("Manipulations",
-                Invocation.Create(current, old, SwapManipulations));
-
-            itemsController.UpdateSelection();
-            Manipulated = itemsController;
-        }
-
-        void SwapMeshManipulation(MeshManipulationState old,
-            MeshManipulationState current)
-        {
-            Trace.WriteLine("swapMeshManipulationWithOld:current:");
-
-            items.CurrentMeshManipulation = old;
-
-            undo.PrepareUndo("Mesh Manipulation",
-                Invocation.Create(current, old, SwapMeshManipulation));
-
-            itemsController.UpdateSelection();
-            meshController.UpdateSelection();
-            Manipulated = meshController;
-        }
-
-        void SwapAllItems(List<Item> old, List<Item> current, string actionName)
-        {
-            Trace.WriteLine("swapAllItemsWithOld:current:actionName:");
-
-            Trace.WriteLine(string.Format("items count before set = {0}", items.Count));
-            items.AllItems = old;
-            Trace.WriteLine(string.Format("items count after set = {0}", items.Count));
-
-            undo.PrepareUndo(actionName,
-                Invocation.Create(current, old, actionName, SwapAllItems));
-
-            itemsController.UpdateSelection();
-            Manipulated = itemsController;
-        }
-
-        void SwapMeshFullState(MeshFullState old, MeshFullState current, string actionName)
-        {
-            Trace.WriteLine("swapMeshFullStateWithOld:current:actionName:");
-
-            items.CurrentMeshFull = old;
-
-            undo.PrepareUndo(actionName,
-                Invocation.Create(current, old, actionName, SwapMeshFullState));
-
-            itemsController.UpdateSelection();
-            meshController.UpdateSelection();
-            Manipulated = meshController;
-        }
-
-        void AllItemsAction(string actionName, Action action)
-        {
-            var oldItems = items.AllItems;
-            Trace.WriteLine(string.Format("oldItems count = {0}", oldItems.Count));
-
-            action();
-
-            var currentItems = items.AllItems;
-            Trace.WriteLine(string.Format("currentItems count = {0}", currentItems.Count));
-
-            undo.PrepareUndo(actionName,
-                Invocation.Create(oldItems, currentItems, actionName, SwapAllItems));
-        }
-
-        void FullMeshAction(string actionName, Action action)
-        {
-            MeshFullState oldState = items.CurrentMeshFull;
-
-            action();
-
-            MeshFullState currentState = items.CurrentMeshFull;
-            undo.PrepareUndo(actionName,
-                Invocation.Create(oldState, currentState, actionName, SwapMeshFullState));
-        }
-
         public void ManipulationStarted(OpenGLSceneView view)
         {
             Trace.WriteLine("manipulationStarted");
-            manipulationFinished = false;
-
-            if (Manipulated == itemsController)
-            {
-                oldManipulations = items.CurrentManipulations;
-            }
-            else if (Manipulated == meshController)
-            {
-                oldMeshManipulation = items.CurrentMeshManipulation;
-            }
         }
 
         public void ManipulationEnded(OpenGLSceneView view)
         {
             Trace.WriteLine("manipulationEnded");
-            manipulationFinished = true;
-
-            if (Manipulated == itemsController)
-            {
-                undo.PrepareUndo("Manipulations",
-                    Invocation.Create(oldManipulations,
-                        items.CurrentManipulations, SwapManipulations));
-
-                oldManipulations = null;
-            }
-            else if (Manipulated == meshController)
-            {
-                undo.PrepareUndo("Mesh Manipulation",
-                    Invocation.Create(oldMeshManipulation,
-                        items.CurrentMeshManipulation, SwapMeshManipulation));
-
-                oldMeshManipulation = null;
-            }
 
             propertyGrid.Refresh();
 
@@ -614,120 +380,6 @@ namespace OpenGLEditorWindows
             OnEachViewDo(v => { if (v != view) v.Invalidate(); });
         }
 
-        private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Trace.WriteLine("cloneSelected:");
-            if (Manipulated.SelectedCount <= 0)
-                return;
-
-            bool startManipulation = false;
-            if (!manipulationFinished)
-            {
-                startManipulation = true;
-                ManipulationEnded(null);
-            }
-
-            if (Manipulated == itemsController)
-            {
-                var selection = items.CurrentSelection;
-                undo.PrepareUndo("Clone",
-                    Invocation.Create(selection, UndoCloneSelected));
-
-                Manipulated.CloneSelected();
-            }
-            else
-            {
-                FullMeshAction("Clone", () => Manipulated.CloneSelected());
-            }
-
-            OnEachViewDo(view => view.Invalidate());
-
-            if (startManipulation)
-            {
-                ManipulationStarted(null);
-            }
-        }
-
-        void RedoCloneSelected(List<uint> selection)
-        {
-            Trace.WriteLine("redoCloneSelected:");
-
-            Manipulated = itemsController;
-            items.CurrentSelection = selection;
-            Manipulated.CloneSelected();
-
-            undo.PrepareUndo("Clone",
-                Invocation.Create(selection, UndoCloneSelected));
-
-            itemsController.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        void UndoCloneSelected(List<uint> selection)
-        {
-            Trace.WriteLine("undoCloneSelected:");
-
-            Manipulated = itemsController;
-            items.RemoveRange((int)items.Count - selection.Count, selection.Count);
-            items.CurrentSelection = selection;
-
-            undo.PrepareUndo("Clone",
-                Invocation.Create(selection, RedoCloneSelected));
-
-            itemsController.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Trace.WriteLine("deleteSelected:");
-            if (Manipulated.SelectedCount <= 0)
-                return;
-
-            if (Manipulated == itemsController)
-            {
-                var currentItems = items.CurrentItems;
-                undo.PrepareUndo("Delete",
-                    Invocation.Create(currentItems, UndoDeleteSelected));
-
-                Manipulated.RemoveSelected();
-            }
-            else
-            {
-                FullMeshAction("Delete", () => Manipulated.RemoveSelected());
-            }
-
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        void RedoDeleteSelected(List<IndexedItem> selectedItems)
-        {
-            Trace.WriteLine("redoDeleteSelected:");
-
-            Manipulated = itemsController;
-            items.SetSelectionFromIndexedItems(selectedItems);
-            Manipulated.RemoveSelected();
-
-            undo.PrepareUndo("Delete",
-                Invocation.Create(selectedItems, UndoDeleteSelected));
-
-            itemsController.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        void UndoDeleteSelected(List<IndexedItem> selectedItems)
-        {
-            Trace.WriteLine("undoDeleteSelected:");
-            Manipulated = itemsController;
-            items.CurrentItems = selectedItems;
-
-            undo.PrepareUndo("Delete",
-                Invocation.Create(selectedItems, RedoDeleteSelected));
-
-            itemsController.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Manipulated.ChangeSelection(1);
@@ -738,73 +390,6 @@ namespace OpenGLEditorWindows
         {
             Manipulated.InvertSelection();
             OnEachViewDo(view => view.Invalidate());
-        }
-
-        private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Trace.WriteLine("mergeSelected:");
-            if (Manipulated.SelectableCount <= 0)
-                return;
-
-            if (Manipulated == itemsController)
-            {
-                AllItemsAction("Merge", () => items.MergeSelectedItems());
-            }
-            else
-            {
-                FullMeshAction("Merge", () => CurrentMesh.MergeSelected());
-            }
-
-            Manipulated.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        private void splitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Trace.WriteLine("splitSelected:");
-            if (Manipulated.SelectedCount <= 0)
-                return;
-
-            if (Manipulated == meshController)
-            {
-                FullMeshAction("Split", () => CurrentMesh.SplitSelected());
-            }
-
-            Manipulated.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        private void flipToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Trace.WriteLine("flipSelected:");
-            if (Manipulated.SelectedCount <= 0)
-                return;
-
-            if (Manipulated == meshController)
-            {
-                FullMeshAction("Flip", () => CurrentMesh.FlipSelected());
-            }
-
-            Manipulated.UpdateSelection();
-            OnEachViewDo(view => view.Invalidate());
-        }
-
-        private void mergeVertexPairsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Manipulated == meshController)
-            {
-                CurrentMesh.MergeVertexPairs();
-                Manipulated.UpdateSelection();
-                OnEachViewDo(view => view.Invalidate());
-            }
-        }
-
-        private void dropDownEditMode_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            string tag = e.ClickedItem.Tag.ToString();
-            int parsed = int.Parse(tag);
-            dropDownEditMode.Text = e.ClickedItem.Text;
-            ChangeEditMode((EditMode)parsed);
         }
 
         private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -888,9 +473,9 @@ namespace OpenGLEditorWindows
             if (IsSaveQuestionCancelled())
                 return;
 
-            items = new ItemCollection();
-            itemsController.Model = items;
-            itemsController.UpdateSelection();
+            bulletWrapper = new ExperimentalBulletWrapper();
+            bulletController.Model = bulletWrapper;
+            bulletController.UpdateSelection();
             undo.Clear();
             OnEachViewDo(view => view.Invalidate());
         }
@@ -912,16 +497,10 @@ namespace OpenGLEditorWindows
 
             if (Path.GetExtension(lastFileName) == ".bullet")
             {
-                bulletWrapper = new ExperimentalBulletWrapper(lastFileName);
+                bulletWrapper = new ExperimentalBulletWrapper();
+                bulletWrapper.Load(lastFileName);
                 bulletController.Model = bulletWrapper;
                 Manipulated = bulletController;
-            }
-            else
-            {
-                items = new ItemCollection();
-                items.ReadFromFile(lastFileName);
-                itemsController.Model = items;
-                itemsController.UpdateSelection();
             }
             
             undo.Clear();
@@ -942,7 +521,7 @@ namespace OpenGLEditorWindows
                     lastFileName = dlg.FileName;
                 }
             }
-            items.WriteToFile(lastFileName);
+            bulletWrapper.Save(lastFileName);
             undo.DocumentSaved();
         }
 
@@ -957,7 +536,7 @@ namespace OpenGLEditorWindows
 
                 lastFileName = dlg.FileName;
             }
-            items.WriteToFile(lastFileName);
+            bulletWrapper.Save(lastFileName);
             undo.DocumentSaved();
         }
 

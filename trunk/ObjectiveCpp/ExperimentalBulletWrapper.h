@@ -27,37 +27,6 @@ using namespace std;
 #import "btSerializer.h"
 using namespace bParse;
 
-class Transform
-{
-public:
-	Vector3D position;
-	Quaternion rotation;
-	
-	Transform(const btVector3& position, const btQuaternion& rotation)
-	{
-		this->position = Vector3D(position.x(), position.y(), position.z());
-		this->rotation = Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
-	}
-	
-	Matrix4x4 ToMatrix()
-	{
-		Matrix4x4 t, r;
-		t.Translate(position);
-		rotation.ToMatrix(r);
-		return t * r;
-	}
-	
-	btVector3 ToBulletVector3()
-	{
-		return btVector3(position.x, position.y, position.z);
-	}
-	
-	btQuaternion ToBulletQuaternion()
-	{
-		return btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);
-	}
-};
-
 class BulletDebugDraw : public btIDebugDraw
 {
 private:
@@ -116,7 +85,8 @@ public:
 	virtual btRigidBody*  createRigidBody(bool isDynamic, 
 										  btScalar mass, 
 										  const btTransform& startTransform,
-										  btCollisionShape* shape,const char* bodyName)
+										  btCollisionShape* shape,
+										  const char* bodyName)
 	{
 		NSLog(@"Created Rigid Body: %s", bodyName);
 		bodiesNames.push_back(bodyName);
@@ -136,7 +106,6 @@ public:
 	GL_ShapeDrawer *shapeDrawer;
 	BulletDebugDraw *debugDrawer; 
 	vector<BOOL> *selection;
-	vector<Transform> *transforms;	
 }
 
 - (id)initWithFileName:(NSString *)fileName;

@@ -13,6 +13,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <vector>
+#include <string>
 using namespace std;
 #include "../PureCpp/Enums.h"
 #include "OpenGLManipulatingModel.h"
@@ -28,37 +29,75 @@ using namespace std;
 #include "LinearMath/btIDebugDraw.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "../PureCpp/GL_ShapeDrawerClone.h"
+#include "LinearMath/btSerializer.h"
 using namespace bParse;
 
-class Transform
+class BulletDebugDraw : public btIDebugDraw
+{
+private:
+	DebugDrawModes debugDrawMode;
+public:
+	BulletDebugDraw() 
+	{
+		debugDrawMode = DBG_MAX_DEBUG_DRAW_MODE;
+	}
+	
+	virtual void	drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
+	{
+		glColor3f(color.x(), color.y(), color.z());
+		glBegin(GL_LINES);
+		glVertex3f(from.x(), from.y(), from.z());
+		glVertex3f(to.x(), to.y(), to.z());
+		glEnd();
+	}
+	
+	virtual void	drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color)
+	{
+		// ignored
+	}
+	
+	virtual void	reportErrorWarning(const char* warningString) 
+	{
+		//NSLog(@"Warning from Bullet: %s", warningString);
+	}
+	
+	virtual void	draw3dText(const btVector3& location,const char* textString) 
+	{
+		// ignored
+	}
+	
+	virtual void	setDebugMode(int debugMode)
+	{
+		debugDrawMode = (DebugDrawModes)debugMode;
+	}
+	
+	virtual int		getDebugMode() const
+	{
+		return debugDrawMode;
+	}
+};
+
+class ExperimentalWorldImporter : public btBulletWorldImporter
 {
 public:
-	Vector3D position;
-	Quaternion rotation;
+	vector<string> bodiesNames;
 	
-	Transform(const btVector3& position, const btQuaternion& rotation)
+	ExperimentalWorldImporter(btDynamicsWorld *world) : btBulletWorldImporter(world)
 	{
-		this->position = Vector3D(position.x(), position.y(), position.z());
-		this->rotation = Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+		
 	}
 	
-	Matrix4x4 ToMatrix()
+	virtual btRigidBody*  createRigidBody(bool isDynamic, 
+										  btScalar mass, 
+										  const btTransform& startTransform,
+										  btCollisionShape* shape,
+										  const char* bodyName)
 	{
-		Matrix4x4 t, r;
-		t.Translate(position);
-		rotation.ToMatrix(r);
-		return t * r;
+		//NSLog(@"Created Rigid Body: %s", bodyName);
+		bodiesNames.push_back(bodyName);
+		return btBulletWorldImporter::createRigidBody(isDynamic, mass, startTransform, shape, bodyName);
 	}
 	
-	btVector3 ToBulletVector3()
-	{
-		return btVector3(position.x, position.y, position.z);
-	}
-	
-	btQuaternion ToBulletQuaternion()
-	{
-		return btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);
-	}
 };
 
 class BulletWrapperHelper
@@ -69,10 +108,9 @@ public:
 	btDbvtBroadphase *broadphase;
 	btSequentialImpulseConstraintSolver *solver;
 	btDynamicsWorld *dynamicsWorld;
-	btBulletWorldImporter *worldImporter;
+	ExperimentalWorldImporter *worldImporter;
 	GL_ShapeDrawer *shapeDrawer;
 	vector<CocoaBool> *selection;
-	vector<Transform> *transforms;
 
 	BulletWrapperHelper()
 	{
@@ -82,10 +120,9 @@ public:
 		solver = new btSequentialImpulseConstraintSolver();
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 		dynamicsWorld->setGravity(btVector3(0, -10, 0));	
-		worldImporter = new btBulletWorldImporter(dynamicsWorld);
+		worldImporter = new ExperimentalWorldImporter(dynamicsWorld);
 		shapeDrawer = new GL_ShapeDrawer();
 		selection = new vector<CocoaBool>();
-		transforms = new vector<Transform>();
 	}
 
 	~BulletWrapperHelper()
@@ -97,7 +134,6 @@ public:
 		delete dynamicsWorld;
 		delete worldImporter;
 		delete selection;
-		delete transforms;
 	}
 
 	bool LoadFile(const char *fileName)
@@ -107,10 +143,6 @@ public:
 			for (int i = 0; i < dynamicsWorld->getNumCollisionObjects(); i++)
 			{
 				selection->push_back(NO);
-				btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[i];
-				btVector3 pos = colObj->getWorldTransform().getOrigin();
-				btQuaternion quat = colObj->getWorldTransform().getRotation();
-				transforms->push_back(Transform(pos, quat));
 			}
 			return true;
 		}
@@ -179,34 +211,48 @@ public:
 
 	Vector3D GetPosition(uint index)
 	{
-		return transforms->at(index).position;
+		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+		btVector3 origin = colObj->getWorldTransform().getOrigin();
+		return Vector3D(origin.x(), origin.y(), origin.z());
 	}
 
 	void SetPosition(Vector3D position, uint index)
 	{
-		Transform &transform = transforms->at(index);
-		transform.position = position;
-		//Matrix4x4 m = transform.ToMatrix();
-		
 		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
-		//colObj->getWorldTransform().setFromOpenGLMatrix(m.m);
-		colObj->getWorldTransform().setOrigin(transform.ToBulletVector3());
+		colObj->getWorldTransform().setOrigin(btVector3(position.x, position.y, position.z));
 	}
 
 	Quaternion GetRotation(uint index)
 	{
-		return transforms->at(index).rotation;
+		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+		btQuaternion rotation = colObj->getWorldTransform().getRotation();
+		return Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
 	}
 
 	void SetRotation(Quaternion rotation, uint index)
 	{
-		Transform &transform = transforms->at(index);
-		transform.rotation = rotation;
-		//Matrix4x4 m = transform.ToMatrix();
-		
 		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
-		//colObj->getWorldTransform().setFromOpenGLMatrix(m.m);
-		colObj->getWorldTransform().setRotation(transform.ToBulletQuaternion());
+		colObj->getWorldTransform().setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+	}
+
+	string GetName(uint index)
+	{
+		return worldImporter->bodiesNames.at(index);
+	}
+
+	void Save(const char *fileName)
+	{
+		//create a large enough buffer. There is no method to pre-calculate the buffer size yet.
+		int maxSerializeBufferSize = 1024 * 1024 * 5;
+	
+		btDefaultSerializer *serializer = new btDefaultSerializer(maxSerializeBufferSize);
+		dynamicsWorld->serialize(serializer);
+	
+		FILE *file = fopen(fileName, "wb");
+		fwrite(serializer->getBufferPointer(), serializer->getCurrentBufferSize(), 1, file);
+		fclose(file);
+	
+		delete serializer;
 	}
 };
 
@@ -219,8 +265,10 @@ namespace ManagedCpp
 	private:
 		BulletWrapperHelper *wrapper;
 	public:
-		ExperimentalBulletWrapper(String ^fileName);
+		ExperimentalBulletWrapper();
 		void StepSimulation(btScalar timeStep);
+		void Load(String ^fileName);
+		void Save(String ^fileName);
 
 		virtual property uint Count { uint get(); }
 		virtual	CocoaBool IsSelected(uint index);
@@ -229,9 +277,9 @@ namespace ManagedCpp
 		virtual	void CloneSelected();
 		virtual	void RemoveSelected();
 		
-		//@optional
 		virtual	void WillSelect();
 		virtual	void DidSelect();
+		virtual String^ GetName(uint index);
 
 		virtual Vector3D GetPosition(uint index);
 		virtual Quaternion GetRotation(uint index);
