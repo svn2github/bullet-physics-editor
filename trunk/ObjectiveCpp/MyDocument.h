@@ -12,7 +12,11 @@
 #import "OpenGLManipulatingController.h"
 #import "ExperimentalBulletWrapper.h"
 
+#ifdef MAC_OS_X_VERSION_10_6
+@interface MyDocument : NSDocument <OpenGLSceneViewDelegate, OpenGLTransforming, NSTableViewDataSource>
+#else
 @interface MyDocument : NSDocument <OpenGLSceneViewDelegate, OpenGLTransforming>
+#endif
 {
 @public // public for unit tests
 	BOOL manipulationFinished;
