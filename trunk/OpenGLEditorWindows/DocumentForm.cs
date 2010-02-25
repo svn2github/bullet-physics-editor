@@ -18,11 +18,6 @@ namespace OpenGLEditorWindows
     public partial class DocumentForm : Form, OpenGLSceneViewDelegate
     {
         UndoManager undo;
-
-        PropertyObserver<float> observerSelectionX;
-        PropertyObserver<float> observerSelectionY;
-        PropertyObserver<float> observerSelectionZ;
-
         List<OpenGLSceneView> views;
 
         string lastFileName = null;
@@ -39,7 +34,7 @@ namespace OpenGLEditorWindows
 
         PropertyGrid propertyGrid = null;
         TextBox logTextBox = null;
-        TreeView sceneGraphTreeView = null;
+        ListBox objectView = null;
 
         DockFourViews fourViewDock = null;
         DockPropertyPanel propertyPanel = null;
@@ -79,7 +74,7 @@ namespace OpenGLEditorWindows
             bottomSplit = fourViewDock.bottomSplit;
 
             logTextBox = logPanel.logTextBox;
-            sceneGraphTreeView = hierarchyPanel.sceneGraphTreeView;
+            objectView = hierarchyPanel.objectView;
             propertyGrid = propertyPanel.propertyGrid;
 
             logWriter = new StringWriter();
@@ -108,10 +103,6 @@ namespace OpenGLEditorWindows
                     view.TheDelegate = this;
                 });
 
-            observerSelectionX = this.ObserveProperty<float>("SelectionX");
-            observerSelectionY = this.ObserveProperty<float>("SelectionY");
-            observerSelectionZ = this.ObserveProperty<float>("SelectionZ");
-            
             undo.NeedsSaveChanged += new EventHandler(undo_NeedsSaveChanged);
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
 
@@ -135,7 +126,9 @@ namespace OpenGLEditorWindows
             simulationTimer.Interval = 1000 / 60;
             simulationTimer.Enabled = false;
             simulationTimer.Tick += new EventHandler(simulationTimer_Tick);
-        }
+
+            objectView.SelectedIndexChanged += new EventHandler(objectView_SelectedIndexChanged);
+        }       
 
         void simulationTimer_Tick(object sender, EventArgs e)
         {
@@ -201,87 +194,7 @@ namespace OpenGLEditorWindows
                 logTextBox.ScrollToCaret();
             }
         }
-
-        #region Bindings magic
-
-        void BindSelectionXYZ(OpenGLManipulatingController controller)
-        {
-            controller.ObserverSelectionX.WillChange += new EventHandler(ObserverSelectionX_WillChange);
-            controller.ObserverSelectionY.WillChange += new EventHandler(ObserverSelectionY_WillChange);
-            controller.ObserverSelectionZ.WillChange += new EventHandler(ObserverSelectionZ_WillChange);
-            controller.ObserverSelectionX.DidChange += new EventHandler(ObserverSelectionX_DidChange);
-            controller.ObserverSelectionY.DidChange += new EventHandler(ObserverSelectionY_DidChange);
-            controller.ObserverSelectionZ.DidChange += new EventHandler(ObserverSelectionZ_DidChange);
-        }
-
-        void ObserverSelectionX_WillChange(object sender, EventArgs e)
-        {
-            observerSelectionX.RaiseWillChange();
-        }
-
-        void ObserverSelectionY_WillChange(object sender, EventArgs e)
-        {
-            observerSelectionY.RaiseWillChange();
-        }
-
-        void ObserverSelectionZ_WillChange(object sender, EventArgs e)
-        {
-            observerSelectionZ.RaiseWillChange();
-        }
-
-        void ObserverSelectionX_DidChange(object sender, EventArgs e)
-        {
-            observerSelectionX.RaiseDidChange();
-        }
-
-        void ObserverSelectionY_DidChange(object sender, EventArgs e)
-        {
-            observerSelectionY.RaiseDidChange();
-        }
-
-        void ObserverSelectionZ_DidChange(object sender, EventArgs e)
-        {
-            observerSelectionZ.RaiseDidChange();
-        }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public float SelectionX
-        {
-            get { return Manipulated.SelectionX; }
-            set
-            {
-                ManipulationStarted(null);
-                Manipulated.SelectionX = value;
-                ManipulationEnded(null);
-            }
-        }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public float SelectionY
-        {
-            get { return Manipulated.SelectionY; }
-            set
-            {
-                ManipulationStarted(null);
-                Manipulated.SelectionY = value;
-                ManipulationEnded(null);
-            }
-        }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public float SelectionZ
-        {
-            get { return Manipulated.SelectionZ; }
-            set
-            {
-                ManipulationStarted(null);
-                Manipulated.SelectionZ = value;
-                ManipulationEnded(null);
-            }
-        }
-
-        #endregion
-
+                
         private void OnEachViewDo(Action<OpenGLSceneView> actionOnView)
         {
             actionOnView(openGLSceneViewLeft);
@@ -290,11 +203,62 @@ namespace OpenGLEditorWindows
             actionOnView(openGLSceneViewPerspective);
         }
 
+        void InvalidateViewsExcept(OpenGLSceneView view)
+        {
+            OnEachViewDo(v => { if (v != view) v.Invalidate(); });
+            SyncObjectView();
+        }
+
+        void InvalidateAllViews()
+        {
+            OnEachViewDo(v => v.Invalidate());
+            SyncObjectView();
+        }
+
+        bool ignoreIndexChanged = false;
+
+        void objectView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreIndexChanged)
+                return;
+
+            if (objectView.SelectedItems != null)
+            {
+                bulletController.ChangeSelection(0);
+                foreach (var item in objectView.SelectedItems)
+                {
+                    BulletObjectWrapper wrapper = item as BulletObjectWrapper;
+                    if (wrapper != null)
+                    {
+                        bulletWrapper.SetSelected(1, wrapper.Index);
+                    }
+                }
+                bulletController.UpdateSelection();
+                OnEachViewDo(v => v.Invalidate());
+            }
+        }
+
+        void SyncObjectView()
+        {
+            ignoreIndexChanged = true;
+            objectView.BeginUpdate();
+            objectView.Items.Clear();
+            for (uint i = 0; i < bulletWrapper.Count; i++)
+            {
+                BulletObjectWrapper wrapper = new BulletObjectWrapper(i, bulletWrapper);
+                objectView.Items.Add(wrapper);
+                if (bulletWrapper.IsSelected(i) == 1)
+                    objectView.SelectedItems.Add(wrapper);
+            }
+            objectView.EndUpdate();
+            ignoreIndexChanged = false;
+        }
+
         private void SetManipulator(ManipulatorType manipulator)
         {
             OnEachViewDo(view => view.CurrentManipulator = manipulator);
             Manipulated.CurrentManipulator = manipulator;
-            OnEachViewDo(view => view.Invalidate());
+            InvalidateAllViews();
 
             btnSelect.Checked = btnTranslate.Checked = btnRotate.Checked = btnScale.Checked = false;
             switch (manipulator)
@@ -325,7 +289,7 @@ namespace OpenGLEditorWindows
                 propertyGrid.SelectedObject = value;
 
                 OnEachViewDo(view => view.Manipulated = value);
-                OnEachViewDo(view => view.Invalidate());
+                InvalidateAllViews();
             }
         }
 
@@ -370,26 +334,26 @@ namespace OpenGLEditorWindows
 
             propertyGrid.Refresh();
 
-            OnEachViewDo(v => { if (v != view) v.Invalidate(); });
+            InvalidateViewsExcept(view);
         }
 
         public void SelectionChanged(OpenGLSceneView view)
         {
             propertyGrid.Refresh();
             //propertyGrid.SelectedObject = this.items;
-            OnEachViewDo(v => { if (v != view) v.Invalidate(); });
+            InvalidateViewsExcept(view);
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Manipulated.ChangeSelection(1);
-            OnEachViewDo(view => view.Invalidate());
+            InvalidateAllViews();
         }
 
         private void invertSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Manipulated.InvertSelection();
-            OnEachViewDo(view => view.Invalidate());
+            InvalidateAllViews();
         }
 
         private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -504,7 +468,7 @@ namespace OpenGLEditorWindows
             }
             
             undo.Clear();
-            OnEachViewDo(view => view.Invalidate());
+            InvalidateAllViews();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -604,6 +568,23 @@ namespace OpenGLEditorWindows
         private void btnPause_Click(object sender, EventArgs e)
         {
             simulationTimer.Enabled = false;
+        }
+    }
+
+    class BulletObjectWrapper
+    {
+        public uint Index;
+        public ExperimentalBulletWrapper BulletWrapper;
+
+        public BulletObjectWrapper(uint index, ExperimentalBulletWrapper wrapper)
+        {
+            Index = index;
+            BulletWrapper = wrapper;
+        }
+
+        public override string ToString()
+        {
+            return BulletWrapper.GetName(Index);
         }
     }
 }
