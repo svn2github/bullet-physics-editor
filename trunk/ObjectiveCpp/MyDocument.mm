@@ -82,8 +82,43 @@
 	
 	propertyReflector = [[PropertyReflector alloc] initWithTableView:propertyView];
 	[propertyReflector setReflectedObject:self];
-	
 	[objectView setDataSource:self];
+	[objectView setDelegate:self];
+}
+
+- (void)setNeedsDisplayExceptView:(OpenGLSceneView *)view
+{
+	for (OpenGLSceneView *v in views)
+	{ 
+		if (v != view)
+			[v setNeedsDisplay:YES]; 
+	}
+	[self syncObjectView];
+}
+
+- (void)setNeedsDisplayOnAllViews
+{
+	for (OpenGLSceneView *v in views)
+	{
+		[v setNeedsDisplay:YES];
+	}
+	[self syncObjectView];
+}
+
+- (void)syncObjectView
+{
+	[objectView reloadData];
+	id manipulatedObj = manipulated;
+	if ([manipulatedObj respondsToSelector:@selector(isObjectSelectedAtIndex:)])
+	{
+		NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+		for (uint i = 0; i < [manipulated selectableCount]; i++)
+		{
+			if ([manipulated isObjectSelectedAtIndex:i])
+				[indexSet addIndex:i];
+		}
+		[objectView selectRowIndexes:indexSet byExtendingSelection:NO];
+	}
 }
 
 - (id<OpenGLManipulating>)manipulated
@@ -100,6 +135,8 @@
 		[view setManipulated:value];
 		[view setNeedsDisplay:YES];
 	}
+	
+	[self syncObjectView];
 }
 
 - (float)positionX
@@ -235,23 +272,13 @@
 {
 	NSLog(@"manipulationEndedInView:");	
 	manipulationFinished = YES;
-	
-	for (OpenGLSceneView *v in views)
-	{ 
-		if (v != view)
-			[v setNeedsDisplay:YES]; 
-	}
+	[self setNeedsDisplayExceptView:view];
 }
 
 - (void)selectionChangedInView:(OpenGLSceneView *)view
 {
 	NSLog(@"selectionChangedInView:");
-	
-	for (OpenGLSceneView *v in views)
-	{ 
-		if (v != view)
-			[v setNeedsDisplay:YES]; 
-	}
+	[self setNeedsDisplayExceptView:view];
 }
 
 - (IBAction)changeViewMode:(id)sender
@@ -275,19 +302,13 @@
 - (IBAction)selectAll:(id)sender
 {
 	[[self manipulated] changeSelection:YES];
-	for (OpenGLSceneView *view in views)
-	{ 
-		[view setNeedsDisplay:YES]; 
-	}
+	[self setNeedsDisplayOnAllViews];
 }
 
 - (IBAction)invertSelection:(id)sender
 {
 	[[self manipulated] invertSelection];
-	for (OpenGLSceneView *view in views)
-	{ 
-		[view setNeedsDisplay:YES]; 
-	}
+	[self setNeedsDisplayOnAllViews];
 }
 
 - (IBAction)play:(id)sender
@@ -298,19 +319,6 @@
 - (IBAction)pause:(id)sender
 {
 	simulationRunning = NO;
-}
-
-#pragma mark TableViewDataSource
-
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn 
-			row:(NSInteger)rowIndex
-{
-	return [bulletWrapper nameAtIndex:(uint)rowIndex];
-}
-
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
-{
-	return [bulletWrapper count];
 }
 
 - (NSString *)windowNibName
@@ -495,6 +503,40 @@ constrainSplitPosition:(CGFloat)proposedPosition
 	}
 	
 	NSLog(@"No view is under mouse");
+}
+
+#pragma mark NSTableViewDataSource
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	return [manipulated selectableCount];
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	return [manipulated nameAtIndex:(uint)row];
+}
+
+#pragma mark NSTableViewDelegate
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	[manipulated changeSelection:NO];
+	
+	NSIndexSet *indexSet = [objectView selectedRowIndexes];
+	NSUInteger currentIndex = [indexSet firstIndex];
+    while (currentIndex != NSNotFound) 
+	{
+        [manipulated selectObjectAtIndex:currentIndex withMode:OpenGLSelectionModeAdd];
+        currentIndex = [indexSet indexGreaterThanIndex:currentIndex];
+    }
+	
+	[manipulated updateSelection];
+	
+	for (OpenGLSceneView *v in views)
+	{
+		[v setNeedsDisplay:YES];
+	}
 }
 
 @end

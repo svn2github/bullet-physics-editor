@@ -13,7 +13,7 @@
 #import "ExperimentalBulletWrapper.h"
 
 #ifdef MAC_OS_X_VERSION_10_6
-@interface MyDocument : NSDocument <OpenGLSceneViewDelegate, OpenGLTransforming, NSTableViewDataSource>
+@interface MyDocument : NSDocument <OpenGLSceneViewDelegate, OpenGLTransforming, NSTableViewDataSource, NSTableViewDelegate>
 #else
 @interface MyDocument : NSDocument <OpenGLSceneViewDelegate, OpenGLTransforming>
 #endif
@@ -45,6 +45,9 @@
 
 @property (readwrite, assign) id<OpenGLManipulating> manipulated;
 
+- (void)setNeedsDisplayExceptView:(OpenGLSceneView *)view;
+- (void)setNeedsDisplayOnAllViews;
+- (void)syncObjectView;
 - (IBAction)changeManipulator:(id)sender;
 - (IBAction)changeViewMode:(id)sender;
 - (IBAction)selectAll:(id)sender;
