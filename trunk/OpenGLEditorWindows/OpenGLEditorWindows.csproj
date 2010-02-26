@@ -59,6 +59,7 @@
     <Compile Include="AddItemWithStepsDialog.Designer.cs">
       <DependentUpon>AddItemWithStepsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="BulletObjectWrapper.cs" />
     <Compile Include="DockFourViews.cs">
       <SubType>Form</SubType>
     </Compile>

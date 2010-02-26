@@ -51,7 +51,8 @@ namespace OpenGLEditorWindows
         {
             InitializeComponent();
 
-            if (this.DesignMode)
+            // need to fix that, never works correctly because we are in constructor            
+            if (this.DesignMode) 
                 return;
 
             bulletController = new OpenGLManipulatingController();
@@ -207,12 +208,14 @@ namespace OpenGLEditorWindows
         {
             OnEachViewDo(v => { if (v != view) v.Invalidate(); });
             SyncObjectView();
+            propertyGrid.Refresh();
         }
 
         void InvalidateAllViews()
         {
             OnEachViewDo(v => v.Invalidate());
             SyncObjectView();
+            propertyGrid.Refresh();
         }
 
         bool ignoreIndexChanged = false;
@@ -235,6 +238,7 @@ namespace OpenGLEditorWindows
                 }
                 bulletController.UpdateSelection();
                 OnEachViewDo(v => v.Invalidate());
+                propertyGrid.Refresh();
             }
         }
 
@@ -339,8 +343,6 @@ namespace OpenGLEditorWindows
 
         public void SelectionChanged(OpenGLSceneView view)
         {
-            propertyGrid.Refresh();
-            //propertyGrid.SelectedObject = this.items;
             InvalidateViewsExcept(view);
         }
 
@@ -569,22 +571,5 @@ namespace OpenGLEditorWindows
         {
             simulationTimer.Enabled = false;
         }
-    }
-
-    class BulletObjectWrapper
-    {
-        public uint Index;
-        public ExperimentalBulletWrapper BulletWrapper;
-
-        public BulletObjectWrapper(uint index, ExperimentalBulletWrapper wrapper)
-        {
-            Index = index;
-            BulletWrapper = wrapper;
-        }
-
-        public override string ToString()
-        {
-            return BulletWrapper.GetName(Index);
-        }
-    }
+    }    
 }
