@@ -215,12 +215,14 @@
 {
 	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 	colObj->getWorldTransform().setOrigin(btVector3(position.x, position.y, position.z));
+	colObj->activate(true); // added activation mentioned in issue 6
 }
 
 - (void)setRotation:(Quaternion)rotation atIndex:(uint)index
 {
 	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 	colObj->getWorldTransform().setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+	colObj->activate(true); // added activation mentioned in issue 6
 }
 
 - (void)setScale:(Vector3D)scale atIndex:(uint)index

@@ -220,6 +220,7 @@ public:
 	{
 		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 		colObj->getWorldTransform().setOrigin(btVector3(position.x, position.y, position.z));
+		colObj->activate(true); // added activation mentioned in issue 6
 	}
 
 	Quaternion GetRotation(uint index)
@@ -233,6 +234,7 @@ public:
 	{
 		btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 		colObj->getWorldTransform().setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+		colObj->activate(true); // added activation mentioned in issue 6
 	}
 
 	string GetName(uint index)
