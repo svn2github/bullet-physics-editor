@@ -94,7 +94,13 @@ public:
 										  const char* bodyName)
 	{
 		//NSLog(@"Created Rigid Body: %s", bodyName);
-		bodiesNames.push_back(bodyName);
+		if (bodyName)
+		{
+			bodiesNames.push_back(bodyName);
+		} else
+		{
+			bodiesNames.push_back("UnnamedBody");
+		}
 		return btBulletWorldImporter::createRigidBody(isDynamic, mass, startTransform, shape, bodyName);
 	}
 	
