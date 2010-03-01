@@ -40,6 +40,14 @@ namespace ManagedCpp
 
 	#pragma region OpenGLManipulatingModel implementation
 
+	void ExperimentalBulletWrapper::Draw(ViewMode mode)
+	{
+		if (mode == ViewMode::ViewModeSolid)
+			wrapper->DrawSolid();
+		else
+			wrapper->DrawWireframe();
+	}
+
 	void ExperimentalBulletWrapper::Draw(uint index, CocoaBool forSelection, ViewMode mode)
 	{
 		wrapper->Draw(index, !forSelection && this->IsSelected(index));

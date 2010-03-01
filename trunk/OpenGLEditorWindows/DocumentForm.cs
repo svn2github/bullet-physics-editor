@@ -129,6 +129,21 @@ namespace OpenGLEditorWindows
             simulationTimer.Tick += new EventHandler(simulationTimer_Tick);
 
             objectView.SelectedIndexChanged += new EventHandler(objectView_SelectedIndexChanged);
+
+            comboBoxViewMode.Items.Add("Solid");
+            comboBoxViewMode.Items.Add("Wireframe");
+            comboBoxViewMode.SelectedItem = "Solid";
+
+            comboBoxViewMode.SelectedIndexChanged += new EventHandler(comboBoxViewMode_SelectedIndexChanged);
+        }
+
+        void comboBoxViewMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            OnEachViewDo(view => 
+                {
+                    view.CurrentViewMode = (string)comboBoxViewMode.SelectedItem == "Solid" ? ViewMode.ViewModeSolid : ViewMode.ViewModeWireframe;
+                    view.Invalidate();
+                });
         }       
 
         void simulationTimer_Tick(object sender, EventArgs e)

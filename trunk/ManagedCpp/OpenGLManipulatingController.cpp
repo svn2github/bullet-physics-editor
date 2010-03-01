@@ -26,11 +26,6 @@ namespace ManagedCpp
 		model = nullptr;
 		modelMesh = nullptr;
 		modelItem = nullptr;
-		
-		ModelObserver ^observer = BindingsExtensions::Observe(this);
-		observerSelectionX = observer->CreateOrGetObserver<float>("SelectionX");
-		observerSelectionY = observer->CreateOrGetObserver<float>("SelectionY");
-		observerSelectionZ = observer->CreateOrGetObserver<float>("SelectionZ");
 	}
 
 	OpenGLManipulatingController::~OpenGLManipulatingController()
@@ -46,28 +41,8 @@ namespace ManagedCpp
 		model = nullptr;
 		modelMesh = nullptr;
 		modelItem = nullptr;
-		observerSelectionX = nullptr;
-		observerSelectionY = nullptr;
-		observerSelectionZ = nullptr;
-
-		BindingsExtensions::ClearAll(this);
 	}
-
-	PropertyObserver<float> ^OpenGLManipulatingController::ObserverSelectionX::get()
-	{
-		return observerSelectionX;
-	}
-
-	PropertyObserver<float> ^OpenGLManipulatingController::ObserverSelectionY::get()
-	{
-		return observerSelectionY;
-	}
-
-	PropertyObserver<float> ^OpenGLManipulatingController::ObserverSelectionZ::get()
-	{
-		return observerSelectionZ;
-	}
-
+	
 	ManipulatorType OpenGLManipulatingController::CurrentManipulator::get()
 	{
 		return currentManipulator;
@@ -75,9 +50,7 @@ namespace ManagedCpp
 
 	void OpenGLManipulatingController::CurrentManipulator::set(ManipulatorType value)
 	{
-		this->WillChangeSelection();
-		currentManipulator = value;
-		this->DidChangeSelection();
+		currentManipulator = value;		
 	}
 
 	uint OpenGLManipulatingController::SelectedCount::get()
@@ -109,41 +82,7 @@ namespace ManagedCpp
 		*modelScale = scale;
 		modelTransform->TranslateRotateScale(position, rotation, scale);
 	}
-
-	#pragma region Selection X, Y, Z
-
-	float OpenGLManipulatingController::SelectionX::get()
-	{
-		return GetSelectionValue(0, currentManipulator);
-	}
-
-	float OpenGLManipulatingController::SelectionY::get()
-	{
-		return GetSelectionValue(1, currentManipulator);
-	}
-
-	float OpenGLManipulatingController::SelectionZ::get()
-	{
-		return GetSelectionValue(2, currentManipulator);
-	}
-
-	void OpenGLManipulatingController::SelectionX::set(float value)
-	{
-		SetSelectionValue(value, 0, currentManipulator);
-	}
-
-	void OpenGLManipulatingController::SelectionY::set(float value)
-	{
-		SetSelectionValue(value, 1, currentManipulator);
-	}
-
-	void OpenGLManipulatingController::SelectionZ::set(float value)
-	{
-		SetSelectionValue(value, 2, currentManipulator);
-	}
-
-	#pragma endregion
-
+	
 	#pragma region Position X, Y, Z
 
 	float OpenGLManipulatingController::PositionX::get()
@@ -311,8 +250,6 @@ namespace ManagedCpp
 	
 	void OpenGLManipulatingController::UpdateSelection()
 	{
-		this->WillChangeSelection();
-
 		if (modelMesh != nullptr)
 		{
 			modelMesh->GetSelectionCenter(selectionCenter, selectionRotation, selectionScale);
@@ -355,21 +292,6 @@ namespace ManagedCpp
 		}
 		selectionRotation->ToEulerAngles(*selectionEuler);
 		selectionCenter->Transform(*modelTransform);
-		this->DidChangeSelection();
-	}
-
-	void OpenGLManipulatingController::WillChangeSelection()
-	{
-		observerSelectionX->RaiseWillChange();
-		observerSelectionY->RaiseWillChange();
-		observerSelectionZ->RaiseWillChange();
-	}
-	
-	void OpenGLManipulatingController::DidChangeSelection()
-	{
-		observerSelectionX->RaiseDidChange();
-		observerSelectionY->RaiseDidChange();
-		observerSelectionZ->RaiseDidChange();
 	}
 
 	Vector3D OpenGLManipulatingController::SelectionCenter::get()
@@ -379,9 +301,7 @@ namespace ManagedCpp
 
 	void OpenGLManipulatingController::SelectionCenter::set(Vector3D value)
 	{
-		this->WillChangeSelection();
 		*selectionCenter = value;
-		this->DidChangeSelection();
 	}
 
 	Quaternion OpenGLManipulatingController::SelectionRotation::get()
@@ -391,10 +311,8 @@ namespace ManagedCpp
 
 	void OpenGLManipulatingController::SelectionRotation::set(Quaternion value)
 	{
-		this->WillChangeSelection();
 		*selectionRotation = value;
 		selectionRotation->ToEulerAngles(*selectionEuler);
-		this->DidChangeSelection();
 	}
 
 	Vector3D OpenGLManipulatingController::SelectionScale::get()
@@ -404,9 +322,7 @@ namespace ManagedCpp
 
 	void OpenGLManipulatingController::SelectionScale::set(Vector3D value)
 	{
-		this->WillChangeSelection();
 		*selectionScale = value;
-		this->DidChangeSelection();
 	}
 
 	void OpenGLManipulatingController::MoveSelectedBy(Vector3D offset)
@@ -522,10 +438,7 @@ namespace ManagedCpp
 	{
 		glPushMatrix();
 		glMultMatrixf(modelTransform->m);
-		for (uint i = 0; i < model->Count; i++)
-		{
-			model->Draw(i, NO, mode);
-		}
+		model->Draw(mode);
 		glPopMatrix();
 	}
 

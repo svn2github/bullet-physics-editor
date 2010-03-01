@@ -19,6 +19,7 @@ namespace ManagedCpp
 		CocoaBool IsSelected(uint index);
 		void SetSelected(CocoaBool selected, uint index);
 		void Draw(uint index, CocoaBool forSelection, ViewMode mode);
+		void Draw(ViewMode mode);
 		void CloneSelected();
 		void RemoveSelected();
 	

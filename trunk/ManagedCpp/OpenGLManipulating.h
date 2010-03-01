@@ -19,10 +19,19 @@ namespace ManagedCpp
 		property Vector3D SelectionCenter { Vector3D get(); void set(Vector3D value); }
 		property Quaternion SelectionRotation { Quaternion get(); void set(Quaternion value); }
 		property Vector3D SelectionScale { Vector3D get(); void set(Vector3D value); }
-		property float SelectionX { float get(); void set(float value); }
-		property float SelectionY { float get(); void set(float value); }
-		property float SelectionZ { float get(); void set(float value); }
 		property uint SelectedCount { uint get(); }
+
+		property float PositionX { float get(); void set(float value); }
+		property float PositionY { float get(); void set(float value); }
+		property float PositionZ { float get(); void set(float value); }
+
+		property float RotationX { float get(); void set(float value); }
+		property float RotationY { float get(); void set(float value); }
+		property float RotationZ { float get(); void set(float value); }
+
+		property float ScaleX { float get(); void set(float value); }
+		property float ScaleY { float get(); void set(float value); }
+		property float ScaleZ { float get(); void set(float value); }
 
 		void MoveSelectedBy(Vector3D offset);
 		void RotateSelectedBy(Quaternion offset);

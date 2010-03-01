@@ -32,12 +32,12 @@ using namespace std;
 #include "LinearMath/btSerializer.h"
 using namespace bParse;
 
-class BulletDebugDraw : public btIDebugDraw
+class BulletDebugDrawer : public btIDebugDraw
 {
 private:
 	DebugDrawModes debugDrawMode;
 public:
-	BulletDebugDraw() 
+	BulletDebugDrawer() 
 	{
 		debugDrawMode = DBG_MAX_DEBUG_DRAW_MODE;
 	}
@@ -116,6 +116,7 @@ public:
 	btDynamicsWorld *dynamicsWorld;
 	ExperimentalWorldImporter *worldImporter;
 	GL_ShapeDrawer *shapeDrawer;
+	BulletDebugDrawer *debugDrawer; 
 	vector<CocoaBool> *selection;
 
 	BulletWrapperHelper()
@@ -128,6 +129,8 @@ public:
 		dynamicsWorld->setGravity(btVector3(0, -10, 0));	
 		worldImporter = new ExperimentalWorldImporter(dynamicsWorld);
 		shapeDrawer = new GL_ShapeDrawer();
+		debugDrawer = new BulletDebugDrawer();
+		dynamicsWorld->setDebugDrawer(debugDrawer);
 		selection = new vector<CocoaBool>();
 	}
 
@@ -139,6 +142,8 @@ public:
 		delete solver;
 		delete dynamicsWorld;
 		delete worldImporter;
+		delete shapeDrawer;
+		delete debugDrawer;
 		delete selection;
 	}
 
@@ -153,6 +158,18 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	void DrawSolid()
+	{
+		for (int i = 0; i < dynamicsWorld->getNumCollisionObjects(); i++)
+			this->Draw(i, NO);		
+	}
+
+	void DrawWireframe()
+	{
+		glDisable(GL_LIGHTING);
+		dynamicsWorld->debugDrawWorld();
 	}
 
 	void Draw(uint index, bool selected)
@@ -281,6 +298,7 @@ namespace ManagedCpp
 		virtual property uint Count { uint get(); }
 		virtual	CocoaBool IsSelected(uint index);
 		virtual	void SetSelected(CocoaBool selected, uint index);
+		virtual void Draw(ViewMode mode);
 		virtual	void Draw(uint index, CocoaBool forSelection, ViewMode mode);
 		virtual	void CloneSelected();
 		virtual	void RemoveSelected();

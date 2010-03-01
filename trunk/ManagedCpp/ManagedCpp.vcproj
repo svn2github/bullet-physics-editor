@@ -182,11 +182,6 @@
 			AssemblyName="System.Windows.Forms, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
 			MinFrameworkVersion="131072"
 		/>
-		<AssemblyReference
-			RelativePath="..\Dependencies\HotChocolate.dll"
-			AssemblyName="HotChocolate, Version=1.0.0.0, processorArchitecture=IA64"
-			MinFrameworkVersion="196613"
-		/>
 	</References>
 	<Files>
 		<Filter
