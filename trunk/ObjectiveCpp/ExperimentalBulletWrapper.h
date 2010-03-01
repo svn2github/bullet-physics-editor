@@ -88,8 +88,17 @@ public:
 										  btCollisionShape* shape,
 										  const char* bodyName)
 	{
-		NSLog(@"Created Rigid Body: %s", bodyName);
-		bodiesNames.push_back(bodyName);
+		if (bodyName)
+		{
+			NSLog(@"Created Rigid Body: %s", bodyName);
+			bodiesNames.push_back(bodyName);
+		}
+		else
+		{
+			NSLog(@"Added unnamed body");
+			bodiesNames.push_back("UnnamedBody");
+		}
+
 		return btBulletWorldImporter::createRigidBody(isDynamic, mass, startTransform, shape, bodyName);
 	}
 	
