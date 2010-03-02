@@ -194,7 +194,7 @@ namespace OpenGLEditorWindows
         void undo_NeedsSaveChanged(object sender, EventArgs e)
         {
             StringBuilder formTitle = new StringBuilder();
-            formTitle.Append("OpenGL Editor - ");
+            formTitle.Append("Bullet Physics Editor - ");
             if (string.IsNullOrEmpty(lastFileName))
                 formTitle.Append("Untitled");
             else
