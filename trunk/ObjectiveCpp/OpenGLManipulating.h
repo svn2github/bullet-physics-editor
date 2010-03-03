@@ -34,5 +34,6 @@
 - (void)cloneSelected;
 - (void)removeSelected;
 - (NSString *)nameAtIndex:(uint)index;
+- (void)setName:(NSString *)name atIndex:(uint)index;
 
 @end

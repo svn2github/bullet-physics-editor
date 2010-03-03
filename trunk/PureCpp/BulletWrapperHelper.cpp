@@ -170,3 +170,7 @@ string BulletWrapperHelper::GetName(uint index)
 	return worldImporter->bodiesNames.at(index);
 }
 
+void BulletWrapperHelper::SetName(string name, uint index)
+{
+	worldImporter->bodiesNames.at(index) = name;
+}

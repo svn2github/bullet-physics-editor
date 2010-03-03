@@ -603,5 +603,10 @@
 	return [model nameAtIndex:index];
 }
 
+- (void)setName:(NSString *)name atIndex:(uint)index
+{
+	[model setName:name atIndex:index];
+}
+
 @end
 

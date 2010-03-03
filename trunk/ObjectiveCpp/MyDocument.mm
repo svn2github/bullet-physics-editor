@@ -498,6 +498,11 @@ constrainSplitPosition:(CGFloat)proposedPosition
 	return [manipulated nameAtIndex:(uint)row];
 }
 
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	[manipulated setName:[object description] atIndex:(uint)row];
+}
+
 #pragma mark NSTableViewDelegate
 
 - (void)syncObjectView

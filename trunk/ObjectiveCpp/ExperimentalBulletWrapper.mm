@@ -142,8 +142,14 @@
 
 - (NSString *)nameAtIndex:(uint)index
 {
-	string name = wrapper->worldImporter->bodiesNames.at(index);
+	string name = wrapper->GetName(index);
 	return [NSString stringWithCString:name.c_str() encoding:NSASCIIStringEncoding];
+}
+
+- (void)setName:(NSString *)name atIndex:(uint)index
+{
+	string newName = [name cStringUsingEncoding:NSASCIIStringEncoding];
+	wrapper->SetName(newName, index);
 }
 
 @end

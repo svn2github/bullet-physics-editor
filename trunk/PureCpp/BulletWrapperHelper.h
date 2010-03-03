@@ -41,5 +41,6 @@ public:
 	Quaternion GetRotation(uint index);
 	void SetRotation(Quaternion rotation, uint index);
 	
-	string GetName(uint index);	
+	string GetName(uint index);
+	void SetName(string name, uint index);
 };
