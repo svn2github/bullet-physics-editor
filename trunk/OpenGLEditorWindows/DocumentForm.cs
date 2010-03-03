@@ -579,12 +579,8 @@ namespace OpenGLEditorWindows
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            simulationTimer.Enabled = true;
-        }
-
-        private void btnPause_Click(object sender, EventArgs e)
-        {
-            simulationTimer.Enabled = false;
-        }
+            simulationTimer.Enabled = !simulationTimer.Enabled;
+            btnPlay.Checked = simulationTimer.Enabled;
+        }        
     }    
 }

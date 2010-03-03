@@ -54,6 +54,5 @@
 - (IBAction)invertSelection:(id)sender;
 - (void)toggleOneViewFourView:(id)sender;
 - (IBAction)play:(id)sender;
-- (IBAction)pause:(id)sender;
 
 @end

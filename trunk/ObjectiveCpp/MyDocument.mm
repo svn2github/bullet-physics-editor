@@ -297,12 +297,9 @@
 
 - (IBAction)play:(id)sender
 {
-	simulationRunning = YES;
-}
-
-- (IBAction)pause:(id)sender
-{
-	simulationRunning = NO;
+	simulationRunning = !simulationRunning;
+	NSSegmentedControl *segmentedControl = (NSSegmentedControl *)sender;
+	[segmentedControl setSelected:simulationRunning forSegment:0];
 }
 
 - (NSString *)windowNibName
