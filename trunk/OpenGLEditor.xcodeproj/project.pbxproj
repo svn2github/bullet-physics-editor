@@ -137,6 +137,9 @@
 		A72654BB1115BC7C005F0682 /* btWheelInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A72654B81115BC7C005F0682 /* btWheelInfo.cpp */; };
 		A754C41E0FF92F8600A48E13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A754C41D0FF92F8600A48E13 /* OpenGL.framework */; };
 		A754C4220FF92F9400A48E13 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A754C4210FF92F9400A48E13 /* GLUT.framework */; };
+		A77900EF113EF737007F35D7 /* ExperimentalWorldImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A77900EE113EF737007F35D7 /* ExperimentalWorldImporter.cpp */; };
+		A779010A113EFBBE007F35D7 /* BulletDebugDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7790108113EFBBE007F35D7 /* BulletDebugDrawer.cpp */; };
+		A7790129113EFC4D007F35D7 /* BulletWrapperHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7790128113EFC4D007F35D7 /* BulletWrapperHelper.cpp */; };
 		A785C66D1107B0C700E42D68 /* CachedProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = A785C66C1107B0C700E42D68 /* CachedProperty.m */; };
 		A7C6FE751090D4BD008A55E1 /* TmdModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FE621090D4BD008A55E1 /* TmdModel.cpp */; };
 		A7C6FE761090D4BD008A55E1 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FE651090D4BD008A55E1 /* Camera.cpp */; };
@@ -481,6 +484,12 @@
 		A72654B91115BC7C005F0682 /* btWheelInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = btWheelInfo.h; path = bullet/src/BulletDynamics/Vehicle/btWheelInfo.h; sourceTree = "<group>"; };
 		A754C41D0FF92F8600A48E13 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		A754C4210FF92F9400A48E13 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+		A77900ED113EF737007F35D7 /* ExperimentalWorldImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentalWorldImporter.h; sourceTree = "<group>"; };
+		A77900EE113EF737007F35D7 /* ExperimentalWorldImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExperimentalWorldImporter.cpp; sourceTree = "<group>"; };
+		A7790108113EFBBE007F35D7 /* BulletDebugDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BulletDebugDrawer.cpp; sourceTree = "<group>"; };
+		A7790109113EFBBE007F35D7 /* BulletDebugDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulletDebugDrawer.h; sourceTree = "<group>"; };
+		A7790127113EFC4D007F35D7 /* BulletWrapperHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulletWrapperHelper.h; sourceTree = "<group>"; };
+		A7790128113EFC4D007F35D7 /* BulletWrapperHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BulletWrapperHelper.cpp; sourceTree = "<group>"; };
 		A785C66B1107B0C700E42D68 /* CachedProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CachedProperty.h; sourceTree = "<group>"; };
 		A785C66C1107B0C700E42D68 /* CachedProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CachedProperty.m; sourceTree = "<group>"; };
 		A7A776EF109348AC0099DB45 /* Enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
@@ -974,6 +983,8 @@
 		A7C6FE601090D4BD008A55E1 /* PureCpp */ = {
 			isa = PBXGroup;
 			children = (
+				A7790108113EFBBE007F35D7 /* BulletDebugDrawer.cpp */,
+				A7790109113EFBBE007F35D7 /* BulletDebugDrawer.h */,
 				A7C6FE611090D4BD008A55E1 /* ImportExport */,
 				A7C6FE641090D4BD008A55E1 /* MathCore */,
 				A7C6FE731090D4BD008A55E1 /* OpenGLDrawing.cpp */,
@@ -983,6 +994,10 @@
 				A7A776EF109348AC0099DB45 /* Enums.h */,
 				A7233C981127275900F2E792 /* GL_ShapeDrawerClone.h */,
 				A7233C991127275900F2E792 /* GL_ShapeDrawerClone.cpp */,
+				A77900ED113EF737007F35D7 /* ExperimentalWorldImporter.h */,
+				A77900EE113EF737007F35D7 /* ExperimentalWorldImporter.cpp */,
+				A7790127113EFC4D007F35D7 /* BulletWrapperHelper.h */,
+				A7790128113EFC4D007F35D7 /* BulletWrapperHelper.cpp */,
 			);
 			path = PureCpp;
 			sourceTree = "<group>";
@@ -1287,6 +1302,9 @@
 				A72654BB1115BC7C005F0682 /* btWheelInfo.cpp in Sources */,
 				A7DAC286111622CA005381CC /* ExperimentalBulletWrapper.mm in Sources */,
 				A7233C9A1127275900F2E792 /* GL_ShapeDrawerClone.cpp in Sources */,
+				A77900EF113EF737007F35D7 /* ExperimentalWorldImporter.cpp in Sources */,
+				A779010A113EFBBE007F35D7 /* BulletDebugDrawer.cpp in Sources */,
+				A7790129113EFC4D007F35D7 /* BulletWrapperHelper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

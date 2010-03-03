@@ -24,7 +24,7 @@ namespace ManagedCpp
 		wrapper = new BulletWrapperHelper();
 		
 		string nativeFileName = NativeString(fileName);
-		wrapper->LoadFile(nativeFileName.c_str());
+		wrapper->Load(nativeFileName.c_str());
 	}
 
 	void ExperimentalBulletWrapper::StepSimulation(btScalar timeStep)

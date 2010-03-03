@@ -194,7 +194,31 @@
 			Name="PureCpp"
 			>
 			<File
+				RelativePath="..\PureCpp\BulletDebugDrawer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\PureCpp\BulletDebugDrawer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\PureCpp\BulletWrapperHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\PureCpp\BulletWrapperHelper.h"
+				>
+			</File>
+			<File
 				RelativePath="..\PureCpp\Enums.h"
+				>
+			</File>
+			<File
+				RelativePath="..\PureCpp\ExperimentalWorldImporter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\PureCpp\ExperimentalWorldImporter.h"
 				>
 			</File>
 			<File
