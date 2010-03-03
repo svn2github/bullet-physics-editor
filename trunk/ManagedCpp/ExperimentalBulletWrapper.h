@@ -79,13 +79,27 @@ public:
 
 class ExperimentalWorldImporter : public btBulletWorldImporter
 {
+
+	btRigidBody* m_fixedBody;
+	
+
 public:
 	vector<string> bodiesNames;
+
 	
 	ExperimentalWorldImporter(btDynamicsWorld *world) : btBulletWorldImporter(world)
 	{
+		m_fixedBody = new btRigidBody(0,0,0);
 		
 	}
+
+	virtual ~ExperimentalWorldImporter()
+	{
+		delete m_fixedBody;
+	}
+
+	
+
 	
 	virtual btRigidBody*  createRigidBody(bool isDynamic, 
 										  btScalar mass, 
@@ -103,6 +117,40 @@ public:
 		}
 		return btBulletWorldImporter::createRigidBody(isDynamic, mass, startTransform, shape, bodyName);
 	}
+
+	virtual btGeneric6DofConstraint* createGeneric6DofConstraint(btRigidBody& rbB, const btTransform& frameInB, bool useLinearReferenceFrameB)
+	{
+		btTransform frameInA;
+		frameInA = rbB.getCenterOfMassTransform() * frameInB;
+		return btBulletWorldImporter::createGeneric6DofConstraint(*m_fixedBody,rbB, frameInA,frameInB,useLinearReferenceFrameB);
+	}
+
+	virtual btSliderConstraint* createSliderConstraint(btRigidBody& rbB, const btTransform& frameInB, bool useLinearReferenceFrameA)
+	{
+		btTransform frameInA;
+		frameInA = rbB.getCenterOfMassTransform() * frameInB;
+		return btBulletWorldImporter::createSliderConstraint(*m_fixedBody,rbB,frameInA,frameInB,useLinearReferenceFrameA);
+	}
+
+	virtual btConeTwistConstraint* createConeTwistConstraint(btRigidBody& rbA,const btTransform& rbAFrame)
+	{
+		return btBulletWorldImporter::createConeTwistConstraint(rbA, *m_fixedBody,rbAFrame,rbAFrame);
+	}
+
+	virtual btHingeConstraint* createHingeConstraint(btRigidBody& rbA,const btTransform& rbAFrame, bool useReferenceFrameA)
+	{
+		///not providing rigidbody B means implicitly using worldspace for body B
+		btTransform rbBFrame;
+		rbBFrame = rbAFrame;
+		rbBFrame.getOrigin() = rbA.getCenterOfMassTransform()(rbAFrame.getOrigin());
+		return btBulletWorldImporter::createHingeConstraint(rbA,*m_fixedBody,rbAFrame,rbBFrame,useReferenceFrameA);
+	}
+	virtual btPoint2PointConstraint* createPoint2PointConstraint(btRigidBody& rbA,const btVector3& pivotInA)
+	{
+		btVector3 pivotInB(rbA.getCenterOfMassTransform()(pivotInA));
+		return btBulletWorldImporter::createPoint2PointConstraint(rbA,*m_fixedBody,pivotInA,pivotInB);
+	}
+
 	
 };
 
@@ -136,6 +184,7 @@ public:
 
 	~BulletWrapperHelper()
 	{
+		/*
 		delete collisionConfiguration;
 		delete dispatcher;
 		delete broadphase;
@@ -145,6 +194,8 @@ public:
 		delete shapeDrawer;
 		delete debugDrawer;
 		delete selection;
+		*/
+
 	}
 
 	bool LoadFile(const char *fileName)
