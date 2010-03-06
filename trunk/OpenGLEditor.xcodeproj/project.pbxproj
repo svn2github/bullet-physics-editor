@@ -983,8 +983,6 @@
 		A7C6FE601090D4BD008A55E1 /* PureCpp */ = {
 			isa = PBXGroup;
 			children = (
-				A7790108113EFBBE007F35D7 /* BulletDebugDrawer.cpp */,
-				A7790109113EFBBE007F35D7 /* BulletDebugDrawer.h */,
 				A7C6FE611090D4BD008A55E1 /* ImportExport */,
 				A7C6FE641090D4BD008A55E1 /* MathCore */,
 				A7C6FE731090D4BD008A55E1 /* OpenGLDrawing.cpp */,
@@ -998,6 +996,8 @@
 				A77900EE113EF737007F35D7 /* ExperimentalWorldImporter.cpp */,
 				A7790127113EFC4D007F35D7 /* BulletWrapperHelper.h */,
 				A7790128113EFC4D007F35D7 /* BulletWrapperHelper.cpp */,
+				A7790109113EFBBE007F35D7 /* BulletDebugDrawer.h */,
+				A7790108113EFBBE007F35D7 /* BulletDebugDrawer.cpp */,
 			);
 			path = PureCpp;
 			sourceTree = "<group>";
