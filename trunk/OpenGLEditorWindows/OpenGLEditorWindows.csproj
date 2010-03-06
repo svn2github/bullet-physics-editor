@@ -32,9 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManagedCpp, Version=1.0.3591.40126, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="CppCLI, Version=1.0.3717.39902, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Debug\ManagedCpp.dll</HintPath>
+      <HintPath>..\Dependencies\CppCLI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

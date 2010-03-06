@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="ManagedCpp"
+	Name="CppCLI"
 	ProjectGUID="{6AD1C149-2969-4371-B74F-A50B9692A6CF}"
 	RootNamespace="ManagedCpp"
 	Keyword="ManagedCProj"
@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\Debug"
+			OutputDirectory="..\Dependencies"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -91,7 +91,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\Release"
+			OutputDirectory="..\Dependencies"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
