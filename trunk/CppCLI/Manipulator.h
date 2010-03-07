@@ -16,7 +16,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public ref class Manipulator : OpenGLSelecting
 	{

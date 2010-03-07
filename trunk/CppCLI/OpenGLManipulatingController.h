@@ -19,7 +19,7 @@
 using namespace System;
 using namespace System::ComponentModel;
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public ref class OpenGLManipulatingController : OpenGLManipulating
 	{
@@ -97,6 +97,9 @@ namespace ManagedCpp
 		virtual void InvertSelection();
 		virtual void CloneSelected();
 		virtual void RemoveSelected();
+
+		virtual String^ GetName(uint index);
+		virtual void SetName(String^ name, uint index);
 
 		[Browsable(false)]
 		property OpenGLManipulatingModel ^Model { OpenGLManipulatingModel ^get(); 

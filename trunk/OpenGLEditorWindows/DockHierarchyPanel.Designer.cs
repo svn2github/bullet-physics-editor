@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.objectView = new System.Windows.Forms.ListBox();
+            this.objectView = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.objectView)).BeginInit();
             this.SuspendLayout();
             // 
             // objectView
             // 
+            this.objectView.AllowUserToAddRows = false;
+            this.objectView.AllowUserToDeleteRows = false;
+            this.objectView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.objectView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.objectView.FormattingEnabled = true;
-            this.objectView.IntegralHeight = false;
             this.objectView.Location = new System.Drawing.Point(0, 0);
             this.objectView.Name = "objectView";
-            this.objectView.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.objectView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.objectView.Size = new System.Drawing.Size(235, 342);
             this.objectView.TabIndex = 0;
             // 
@@ -55,13 +57,16 @@
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;
             this.TabText = "Scene Graph";
             this.Text = "Scene Graph";
+            ((System.ComponentModel.ISupportInitialize)(this.objectView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        public System.Windows.Forms.ListBox objectView;
+        public System.Windows.Forms.DataGridView objectView;
+
+
 
 
 

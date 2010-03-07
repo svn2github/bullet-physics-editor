@@ -311,7 +311,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="ManagedCpp"
+			Name="CppCLI"
 			>
 			<File
 				RelativePath=".\AssemblyInfo.cpp"

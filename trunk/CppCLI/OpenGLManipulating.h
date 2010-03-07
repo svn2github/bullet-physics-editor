@@ -11,7 +11,7 @@
 
 #include "OpenGLSelecting.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public interface class OpenGLManipulating : OpenGLSelecting
 	{
@@ -42,5 +42,8 @@ namespace ManagedCpp
 		void InvertSelection();
 		void CloneSelected();
 		void RemoveSelected();
+
+		String^ GetName(uint index);
+		void SetName(String^ name, uint index);
 	};
 }

@@ -8,7 +8,7 @@
 
 #include "MarshalHelpers.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	// based on discussion at http://www.codeguru.com/forum/showthread.php?t=467464
 	string NativeString(String ^managedString)

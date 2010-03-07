@@ -9,11 +9,11 @@ using namespace System::Security::Permissions;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("ManagedCpp")];
+[assembly:AssemblyTitleAttribute("CppCLI")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("")];
-[assembly:AssemblyProductAttribute("ManagedCpp")];
+[assembly:AssemblyProductAttribute("CppCLI")];
 [assembly:AssemblyCopyrightAttribute("Copyright (c)  2009")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];

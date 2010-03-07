@@ -15,7 +15,7 @@
 
 #include "OpenGLManipulatingModel.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public ref class ExperimentalBulletWrapper : OpenGLManipulatingModelItem
 	{
@@ -37,7 +37,9 @@ namespace ManagedCpp
 		
 		virtual	void WillSelect();
 		virtual	void DidSelect();
+
 		virtual String^ GetName(uint index);
+		virtual void SetName(String^ name, uint index);
 
 		virtual Vector3D GetPosition(uint index);
 		virtual Quaternion GetRotation(uint index);

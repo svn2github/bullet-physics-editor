@@ -1,9 +1,9 @@
-﻿// ManagedCpp.cpp : main project file.
+﻿// CppCLI.cpp : main project file.
 
 #include "OpenGLSceneView.h"
 #include "../PureCpp/OpenGLDrawing.h"
 
-namespace ManagedCpp {
+namespace CppCLI {
 
 	const float perspectiveAngle = 45.0f;
 	const float minDistance = 0.2f;

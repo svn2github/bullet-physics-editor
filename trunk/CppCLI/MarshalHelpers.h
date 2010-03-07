@@ -14,7 +14,7 @@ using namespace std;
 using namespace System;
 using namespace System::Text;
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	string NativeString(String ^managedString);
 	String^ ManagedString(string nativeString);

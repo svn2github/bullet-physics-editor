@@ -14,7 +14,7 @@
 #include "../PureCpp/Enums.h"
 #include "../PureCpp/OpenGLDrawing.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public ref class ManipulatorWidget
 	{

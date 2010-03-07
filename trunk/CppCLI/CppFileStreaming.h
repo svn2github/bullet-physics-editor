@@ -12,7 +12,7 @@
 #include <fstream>
 using namespace std;
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public interface class CppFileStreaming
 	{

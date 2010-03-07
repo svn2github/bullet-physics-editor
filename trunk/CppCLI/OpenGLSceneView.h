@@ -17,7 +17,7 @@ using namespace System::Diagnostics;
 #include "OpenGLManipulating.h"
 #include "Manipulator.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	ref class OpenGLSceneView;
 

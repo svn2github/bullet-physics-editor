@@ -8,7 +8,7 @@
 
 #include "OpenGLManipulatingController.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	OpenGLManipulatingController::OpenGLManipulatingController()
 	{
@@ -522,5 +522,15 @@ namespace ManagedCpp
 	{
 		model->RemoveSelected();
 		this->UpdateSelection();
+	}
+
+	String^ OpenGLManipulatingController::GetName(uint index)
+	{
+		return model->GetName(index);
+	}
+
+	void OpenGLManipulatingController::SetName(String^ name, uint index)
+	{
+		model->SetName(name, index);
 	}
 }

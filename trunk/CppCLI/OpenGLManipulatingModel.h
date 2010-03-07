@@ -11,7 +11,7 @@
 #include "../PureCpp/MathCore/MathDeclaration.h"
 #include "OpenGLManipulating.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public interface class OpenGLManipulatingModel
 	{
@@ -26,6 +26,9 @@ namespace ManagedCpp
 		//@optional
 		void WillSelect();
 		void DidSelect();
+
+		String^ GetName(uint index);
+		void SetName(String^ name, uint index);
 	};
 
 	public interface class OpenGLManipulatingModelMesh : OpenGLManipulatingModel

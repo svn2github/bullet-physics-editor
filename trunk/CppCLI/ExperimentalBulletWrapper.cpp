@@ -11,7 +11,7 @@
 #include "MarshalHelpers.h"
 using namespace std;
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	ExperimentalBulletWrapper::ExperimentalBulletWrapper()
 	{
@@ -125,6 +125,11 @@ namespace ManagedCpp
 	String ^ExperimentalBulletWrapper::GetName(uint index)
 	{
 		return ManagedString(wrapper->GetName(index));
+	}
+
+	void ExperimentalBulletWrapper::SetName(String ^name, uint index)
+	{
+		wrapper->SetName(NativeString(name), index);
 	}
 
 	#pragma endregion

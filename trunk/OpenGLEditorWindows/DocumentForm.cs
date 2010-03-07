@@ -6,9 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ManagedCpp;
+using CppCLI;
 using HotChocolate;
-using HotChocolate.Bindings;
 using System.Diagnostics;
 using System.IO;
 using WeifenLuo.WinFormsUI.Docking;
@@ -34,7 +33,7 @@ namespace OpenGLEditorWindows
 
         PropertyGrid propertyGrid = null;
         TextBox logTextBox = null;
-        ListBox objectView = null;
+        DataGridView objectView = null;
 
         DockFourViews fourViewDock = null;
         DockPropertyPanel propertyPanel = null;
@@ -128,8 +127,8 @@ namespace OpenGLEditorWindows
             simulationTimer.Enabled = false;
             simulationTimer.Tick += new EventHandler(simulationTimer_Tick);
 
-            objectView.SelectedIndexChanged += new EventHandler(objectView_SelectedIndexChanged);
-
+            objectView.SelectionChanged += new EventHandler(objectView_SelectionChanged);
+            
             comboBoxViewMode.Items.Add("Solid");
             comboBoxViewMode.Items.Add("Wireframe");
             comboBoxViewMode.SelectedItem = "Solid";
@@ -233,44 +232,40 @@ namespace OpenGLEditorWindows
             propertyGrid.Refresh();
         }
 
-        bool ignoreIndexChanged = false;
+        bool ignoreSelectionChanged = false;
 
-        void objectView_SelectedIndexChanged(object sender, EventArgs e)
+        void objectView_SelectionChanged(object sender, EventArgs e)
         {
-            if (ignoreIndexChanged)
+            if (ignoreSelectionChanged)
                 return;
 
-            if (objectView.SelectedItems != null)
+            for (uint i = 0; i < bulletWrapper.Count; i++)
             {
-                bulletController.ChangeSelection(0);
-                foreach (var item in objectView.SelectedItems)
-                {
-                    BulletObjectWrapper wrapper = item as BulletObjectWrapper;
-                    if (wrapper != null)
-                    {
-                        bulletWrapper.SetSelected(1, wrapper.Index);
-                    }
-                }
-                bulletController.UpdateSelection();
-                OnEachViewDo(v => v.Invalidate());
-                propertyGrid.Refresh();
+                if (objectView.Rows[(int)i].Selected)
+                    bulletWrapper.SetSelected(1, i);
+                else
+                    bulletWrapper.SetSelected(0, i);
             }
+
+            bulletController.UpdateSelection();
+            OnEachViewDo(v => v.Invalidate());
+            propertyGrid.Refresh();
         }
 
         void SyncObjectView()
         {
-            ignoreIndexChanged = true;
-            objectView.BeginUpdate();
-            objectView.Items.Clear();
+            ignoreSelectionChanged = true;
+
+            objectView.DataSource = new BulletObjectWrapperCollection(bulletWrapper);
             for (uint i = 0; i < bulletWrapper.Count; i++)
             {
-                BulletObjectWrapper wrapper = new BulletObjectWrapper(i, bulletWrapper);
-                objectView.Items.Add(wrapper);
                 if (bulletWrapper.IsSelected(i) == 1)
-                    objectView.SelectedItems.Add(wrapper);
+                    objectView.Rows[(int)i].Selected = true;
+                else
+                    objectView.Rows[(int)i].Selected = false;
             }
-            objectView.EndUpdate();
-            ignoreIndexChanged = false;
+
+            ignoreSelectionChanged = false;
         }
 
         private void SetManipulator(ManipulatorType manipulator)

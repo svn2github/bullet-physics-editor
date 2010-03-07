@@ -12,7 +12,7 @@
 #include "Manipulator.h"
 
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	float Manipulator::Size::get()
 	{

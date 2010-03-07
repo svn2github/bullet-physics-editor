@@ -30,11 +30,11 @@
         {
             this.mainSplit = new System.Windows.Forms.SplitContainer();
             this.topSplit = new System.Windows.Forms.SplitContainer();
-            this.openGLSceneViewLeft = new ManagedCpp.OpenGLSceneView();
-            this.openGLSceneViewTop = new ManagedCpp.OpenGLSceneView();
+            this.openGLSceneViewLeft = new CppCLI.OpenGLSceneView();
+            this.openGLSceneViewTop = new CppCLI.OpenGLSceneView();
             this.bottomSplit = new System.Windows.Forms.SplitContainer();
-            this.openGLSceneViewFront = new ManagedCpp.OpenGLSceneView();
-            this.openGLSceneViewPerspective = new ManagedCpp.OpenGLSceneView();
+            this.openGLSceneViewFront = new CppCLI.OpenGLSceneView();
+            this.openGLSceneViewPerspective = new CppCLI.OpenGLSceneView();
             this.mainSplit.Panel1.SuspendLayout();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
@@ -160,10 +160,10 @@
 
         public System.Windows.Forms.SplitContainer mainSplit;
         public System.Windows.Forms.SplitContainer topSplit;
-        public ManagedCpp.OpenGLSceneView openGLSceneViewLeft;
-        public ManagedCpp.OpenGLSceneView openGLSceneViewTop;
+        public CppCLI.OpenGLSceneView openGLSceneViewLeft;
+        public CppCLI.OpenGLSceneView openGLSceneViewTop;
         public System.Windows.Forms.SplitContainer bottomSplit;
-        public ManagedCpp.OpenGLSceneView openGLSceneViewFront;
-        public ManagedCpp.OpenGLSceneView openGLSceneViewPerspective;
+        public CppCLI.OpenGLSceneView openGLSceneViewFront;
+        public CppCLI.OpenGLSceneView openGLSceneViewPerspective;
     }
 }

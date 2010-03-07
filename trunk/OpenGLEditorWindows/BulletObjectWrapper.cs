@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ManagedCpp;
+using CppCLI;
 
 namespace OpenGLEditorWindows
 {
@@ -17,9 +17,26 @@ namespace OpenGLEditorWindows
             BulletWrapper = wrapper;
         }
 
+        public string Name 
+        {
+            get { return BulletWrapper.GetName(Index); }
+            set { BulletWrapper.SetName(value, Index); }
+        }
+
         public override string ToString()
         {
-            return BulletWrapper.GetName(Index);
+            return Name;
+        }
+    }
+
+    public class BulletObjectWrapperCollection : List<BulletObjectWrapper>
+    {
+        public BulletObjectWrapperCollection(ExperimentalBulletWrapper wrapper)
+        {
+            for (uint i = 0; i < wrapper.Count; i++)
+            {
+                this.Add(new BulletObjectWrapper(i, wrapper));
+            }
         }
     }
 }

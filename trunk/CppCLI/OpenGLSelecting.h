@@ -10,7 +10,7 @@
 
 #include "../PureCpp/Enums.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	public interface class OpenGLSelecting
 	{

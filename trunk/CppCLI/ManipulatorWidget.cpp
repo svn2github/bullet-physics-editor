@@ -8,7 +8,7 @@
 
 #include "ManipulatorWidget.h"
 
-namespace ManagedCpp
+namespace CppCLI
 {
 	Axis ManipulatorWidget::ManipAxis::get()
 	{
