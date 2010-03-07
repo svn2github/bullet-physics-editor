@@ -56,6 +56,11 @@ void BulletWrapperHelper::Save(const char *fileName)
 	int maxSerializeBufferSize = 1024 * 1024 * 5;
 	
 	btDefaultSerializer *serializer = new btDefaultSerializer(maxSerializeBufferSize);
+	btCollisionObjectArray& collisionObjects = dynamicsWorld->getCollisionObjectArray();
+	
+	for (int i = 0; i < dynamicsWorld->getNumCollisionObjects(); i++)
+		serializer->registerNameForPointer(collisionObjects[i], worldImporter->bodiesNames[i].c_str());
+		
 	dynamicsWorld->serialize(serializer);
 	
 	FILE *file = fopen(fileName, "wb");
