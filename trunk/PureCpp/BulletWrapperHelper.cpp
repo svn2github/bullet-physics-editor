@@ -179,3 +179,16 @@ void BulletWrapperHelper::SetName(string name, uint index)
 {
 	worldImporter->bodiesNames.at(index) = name;
 }
+
+void BulletWrapperHelper::RemoveSelected()
+{
+	for (int i = 0; i < dynamicsWorld->getNumCollisionObjects(); i++)
+	{
+		if (selection->at(i))
+		{
+			dynamicsWorld->removeCollisionObject(dynamicsWorld->getCollisionObjectArray()[i]);
+			selection->erase(selection->begin() + i);
+			i--;
+		}
+	}
+}

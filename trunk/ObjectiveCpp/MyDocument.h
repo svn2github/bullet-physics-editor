@@ -50,6 +50,8 @@
 - (void)syncObjectView;
 - (IBAction)changeManipulator:(id)sender;
 - (IBAction)changeViewMode:(id)sender;
+- (IBAction)cloneSelected:(id)sender;
+- (IBAction)deleteSelected:(id)sender;
 - (IBAction)selectAll:(id)sender;
 - (IBAction)invertSelection:(id)sender;
 - (void)toggleOneViewFourView:(id)sender;

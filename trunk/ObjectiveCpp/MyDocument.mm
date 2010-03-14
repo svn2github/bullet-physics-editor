@@ -283,6 +283,26 @@
 	}
 }
 
+- (IBAction)cloneSelected:(id)sender
+{
+	NSLog(@"cloneSelected:");
+	if ([manipulated selectedCount] <= 0)
+		return;
+	
+	[manipulated cloneSelected];
+	[self setNeedsDisplayOnAllViews];
+}
+
+- (IBAction)deleteSelected:(id)sender
+{
+	NSLog(@"deleteSelected:");
+	if ([manipulated selectedCount] <= 0)
+		return;
+	
+	[manipulated removeSelected];
+	[self setNeedsDisplayOnAllViews];
+}
+
 - (IBAction)selectAll:(id)sender
 {
 	[[self manipulated] changeSelection:YES];

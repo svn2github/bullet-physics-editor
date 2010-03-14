@@ -43,4 +43,6 @@ public:
 	
 	string GetName(uint index);
 	void SetName(string name, uint index);
+	
+	void RemoveSelected();
 };

@@ -71,7 +71,7 @@
 
 - (void)removeSelected 
 {
-	NSLog(@"removeSelected is not supported");
+	wrapper->RemoveSelected();
 }
 
 - (void)cloneSelected
