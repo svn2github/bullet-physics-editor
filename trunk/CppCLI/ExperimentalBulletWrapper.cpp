@@ -68,10 +68,25 @@ namespace CppCLI
 		wrapper->selection->at(index) = selected;
 	}
 
-	void ExperimentalBulletWrapper::CloneSelected() { }
-	void ExperimentalBulletWrapper::RemoveSelected() { }	
-	void ExperimentalBulletWrapper::WillSelect() { }
-	void ExperimentalBulletWrapper::DidSelect() { }
+	void ExperimentalBulletWrapper::CloneSelected() 
+	{ 
+	
+	}
+
+	void ExperimentalBulletWrapper::RemoveSelected() 
+	{
+		wrapper->RemoveSelected();
+	}
+
+	void ExperimentalBulletWrapper::WillSelect() 
+	{
+	
+	}
+
+	void ExperimentalBulletWrapper::DidSelect() 
+	{
+	
+	}
 
 	Vector3D ExperimentalBulletWrapper::GetPosition(uint index)
 	{

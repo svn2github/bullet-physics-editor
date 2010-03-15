@@ -576,6 +576,15 @@ namespace OpenGLEditorWindows
         {
             simulationTimer.Enabled = !simulationTimer.Enabled;
             btnPlay.Checked = simulationTimer.Enabled;
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Manipulated.SelectedCount <= 0)
+                return;
+
+            Manipulated.RemoveSelected();
+            InvalidateAllViews();
         }        
     }    
 }

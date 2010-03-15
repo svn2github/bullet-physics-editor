@@ -36,7 +36,7 @@ typedef signed char CocoaBool;
 #endif
 
 #ifdef WIN32
-namespace ManagedCpp {
+namespace CppCLI {
 #endif
 
 MyEnum MeshType
