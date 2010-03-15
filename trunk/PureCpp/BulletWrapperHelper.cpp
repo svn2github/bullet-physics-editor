@@ -186,8 +186,23 @@ void BulletWrapperHelper::RemoveSelected()
 	{
 		if (selection->at(i))
 		{
-			dynamicsWorld->removeCollisionObject(dynamicsWorld->getCollisionObjectArray()[i]);
+			btCollisionObject* colObj = dynamicsWorld->getCollisionObjectArray()[i];
+			//also remove the constraints if any
+			btRigidBody* body = btRigidBody::upcast(colObj);
+			if (body)
+			{
+				while (body->getNumConstraintRefs())
+				{
+					btTypedConstraint* constraint = body->getConstraintRef(0);
+					dynamicsWorld->removeConstraint(constraint);
+					delete constraint;
+				}
+			}
+
+			dynamicsWorld->removeCollisionObject(colObj);
 			selection->erase(selection->begin() + i);
+			
+			delete colObj;
 			i--;
 		}
 	}

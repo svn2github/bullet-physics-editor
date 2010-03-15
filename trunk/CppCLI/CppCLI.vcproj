@@ -46,6 +46,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;BT_MANAGED_CODE"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				BrowseInformation="1"
 				WarningLevel="3"
 				WarnAsError="false"
 				DebugInformationFormat="3"
