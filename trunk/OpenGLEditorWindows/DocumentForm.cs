@@ -453,7 +453,8 @@ namespace OpenGLEditorWindows
             bulletController.Model = bulletWrapper;
             bulletController.UpdateSelection();
             undo.Clear();
-            OnEachViewDo(view => view.Invalidate());
+            InvalidateAllViews(); //this also invalidates the Object View
+            //OnEachViewDo(view => view.Invalidate());
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
