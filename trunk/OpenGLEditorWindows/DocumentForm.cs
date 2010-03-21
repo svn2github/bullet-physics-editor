@@ -340,6 +340,7 @@ namespace OpenGLEditorWindows
         public void ManipulationStarted(OpenGLSceneView view)
         {
             Trace.WriteLine("manipulationStarted");
+            UpdateLogWindow();
         }
 
         public void ManipulationEnded(OpenGLSceneView view)
@@ -349,6 +350,7 @@ namespace OpenGLEditorWindows
             propertyGrid.Refresh();
 
             InvalidateViewsExcept(view);
+            UpdateLogWindow();
         }
 
         public void SelectionChanged(OpenGLSceneView view)
@@ -437,6 +439,7 @@ namespace OpenGLEditorWindows
                 }
 
                 Trace.WriteLine("No view is under mouse");
+                UpdateLogWindow();
             }
         }
 
@@ -586,6 +589,17 @@ namespace OpenGLEditorWindows
 
             Manipulated.RemoveSelected();
             InvalidateAllViews();
-        }        
+        }
+
+
+        private void UpdateLogWindow()
+        {
+            logTextBox.Text = logWriter.ToString();
+            if (logTextBox.Text.Length - 1 >= 0)
+            {
+                logTextBox.Select(logTextBox.Text.Length - 1, 0);
+                logTextBox.ScrollToCaret();
+            }
+        }
     }    
 }
