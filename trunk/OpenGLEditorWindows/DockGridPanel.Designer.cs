@@ -1,6 +1,6 @@
 ﻿namespace OpenGLEditorWindows
 {
-    partial class DockHierarchyPanel
+    partial class DockGridPanel
     {
         /// <summary>
         /// Required designer variable.
@@ -44,7 +44,7 @@
             this.objectView.Size = new System.Drawing.Size(235, 342);
             this.objectView.TabIndex = 0;
             // 
-            // DockHierarchyPanel
+            // DockGridPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -55,10 +55,10 @@
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft)
                         | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight)));
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.Name = "DockHierarchyPanel";
+            this.Name = "DockGridPanel";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;
-            this.TabText = "Scene Graph";
-            this.Text = "Scene Graph";
+            this.TabText = "Grid View";
+            this.Text = "Grid View";
             ((System.ComponentModel.ISupportInitialize)(this.objectView)).EndInit();
             this.ResumeLayout(false);
 

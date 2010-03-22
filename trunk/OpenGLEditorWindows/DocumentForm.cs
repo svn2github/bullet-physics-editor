@@ -37,8 +37,9 @@ namespace OpenGLEditorWindows
 
         DockFourViews fourViewDock = null;
         DockPropertyPanel propertyPanel = null;
-        DockHierarchyPanel hierarchyPanel = null;
+        DockGridPanel gridPanel = null;
         DockLogPanel logPanel = null;
+        DockTreePanel treePanel = null;
 
         StringWriter logWriter;
 
@@ -61,8 +62,9 @@ namespace OpenGLEditorWindows
 
             fourViewDock = new DockFourViews();
             propertyPanel = new DockPropertyPanel();
-            hierarchyPanel = new DockHierarchyPanel();
+            gridPanel = new DockGridPanel();
             logPanel = new DockLogPanel();
+            treePanel = new DockTreePanel();
 
             openGLSceneViewLeft = fourViewDock.openGLSceneViewLeft;
             openGLSceneViewTop = fourViewDock.openGLSceneViewTop;
@@ -74,7 +76,7 @@ namespace OpenGLEditorWindows
             bottomSplit = fourViewDock.bottomSplit;
 
             logTextBox = logPanel.logTextBox;
-            objectView = hierarchyPanel.objectView;
+            objectView = gridPanel.objectView;
             propertyGrid = propertyPanel.propertyGrid;
 
             logWriter = new StringWriter();
@@ -113,11 +115,12 @@ namespace OpenGLEditorWindows
 
             fourViewDock.Show(dockPanel1);
             propertyPanel.Show(dockPanel1);
-            hierarchyPanel.Show(dockPanel1);
+            gridPanel.Show(dockPanel1);
             logPanel.Show(dockPanel1);
+            treePanel.Show(dockPanel1);
 
-            dockPanel1.DockLeftPortion = 0.15;   // 15 percent of dock space
-            dockPanel1.DockRightPortion = 0.15;  // 25 percent is default
+            dockPanel1.DockLeftPortion = 0.15;   // 15 percent of dock space, 25 percent is default
+            dockPanel1.DockRightPortion = 0.15;
 
             Manipulated = bulletController;
             propertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid_PropertyValueChanged);

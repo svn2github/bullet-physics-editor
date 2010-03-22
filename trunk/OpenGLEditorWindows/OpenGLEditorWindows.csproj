@@ -66,11 +66,11 @@
     <Compile Include="DockFourViews.Designer.cs">
       <DependentUpon>DockFourViews.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockHierarchyPanel.cs">
+    <Compile Include="DockGridPanel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DockHierarchyPanel.Designer.cs">
-      <DependentUpon>DockHierarchyPanel.cs</DependentUpon>
+    <Compile Include="DockGridPanel.Designer.cs">
+      <DependentUpon>DockGridPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="DockLogPanel.cs">
       <SubType>Form</SubType>
@@ -83,6 +83,12 @@
     </Compile>
     <Compile Include="DockPropertyPanel.Designer.cs">
       <DependentUpon>DockPropertyPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockTreePanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DockTreePanel.Designer.cs">
+      <DependentUpon>DockTreePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="DocumentForm.cs">
@@ -99,14 +105,17 @@
     <EmbeddedResource Include="DockFourViews.resx">
       <DependentUpon>DockFourViews.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockHierarchyPanel.resx">
-      <DependentUpon>DockHierarchyPanel.cs</DependentUpon>
+    <EmbeddedResource Include="DockGridPanel.resx">
+      <DependentUpon>DockGridPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockLogPanel.resx">
       <DependentUpon>DockLogPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockPropertyPanel.resx">
       <DependentUpon>DockPropertyPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockTreePanel.resx">
+      <DependentUpon>DockTreePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DocumentForm.resx">
       <DependentUpon>DocumentForm.cs</DependentUpon>
