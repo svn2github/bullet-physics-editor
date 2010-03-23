@@ -242,6 +242,9 @@ namespace OpenGLEditorWindows
             if (ignoreSelectionChanged)
                 return;
 
+            if (objectView.RowCount != bulletWrapper.Count)
+                return;
+
             for (uint i = 0; i < bulletWrapper.Count; i++)
             {
                 if (objectView.Rows[(int)i].Selected)
