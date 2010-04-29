@@ -19,6 +19,7 @@
 using namespace System;
 using namespace System::ComponentModel;
 
+
 namespace CppCLI
 {
 	public ref class OpenGLManipulatingController : OpenGLManipulating
@@ -39,6 +40,7 @@ namespace CppCLI
 		Vector3D *modelPosition;
 		Quaternion *modelRotation;
 		Vector3D *modelScale;		
+
 	public:
 		OpenGLManipulatingController();
 		~OpenGLManipulatingController();
@@ -56,7 +58,9 @@ namespace CppCLI
 
 		// OpenGLManipulating
 
+		
 		[Browsable(false)]
+		
 		virtual property ManipulatorType CurrentManipulator { ManipulatorType get(); void set(ManipulatorType value); }
 		[Browsable(false)]
 		virtual property Vector3D SelectionCenter { Vector3D get(); void set(Vector3D value); }
@@ -68,26 +72,45 @@ namespace CppCLI
 		virtual property uint SelectedCount { uint get(); }
 
 		[Browsable(true)]
+		[CategoryAttribute("Collision Object")]
+		virtual property String ^ Name { String ^ get(); void set(String ^ value); }
+
+		[Browsable(true)]
+		[CategoryAttribute("Collision Shape")]
+		virtual property String ^ CollisionType{ String ^ get(); }
+
+		[Browsable(true)]
+		[Category("World Transform")]
+		[DescriptionAttribute("Worldspace position of the object")]
 		virtual property float PositionX { float get(); void set(float value); }
 		[Browsable(true)]
+		[Category("World Transform")]
+		[DescriptionAttribute("Worldspace position of the object")]
 		virtual property float PositionY { float get(); void set(float value); }
 		[Browsable(true)]
+		[Category("World Transform")]
+		[Description("Worldspace position of the object")]
 		virtual property float PositionZ { float get(); void set(float value); }
-
 		[Browsable(true)]
+		[Category("World Transform")]
 		virtual property float RotationX { float get(); void set(float value); }
 		[Browsable(true)]
+		[Category("World Transform")]
 		virtual property float RotationY { float get(); void set(float value); }
 		[Browsable(true)]
+		[Category("World Transform")]
 		virtual property float RotationZ { float get(); void set(float value); }
 
+		
 		[Browsable(true)]
-		virtual property float ScaleX { float get(); void set(float value); }
-		[Browsable(true)]
+		[CategoryAttribute("Collision Shape")]
 		virtual property float ScaleY { float get(); void set(float value); }
 		[Browsable(true)]
+		[CategoryAttribute("Collision Shape")]
 		virtual property float ScaleZ { float get(); void set(float value); }
-
+		[Browsable(true)]
+		[CategoryAttribute("Collision Shape")]
+		virtual property float ScaleX { float get(); void set(float value); }
 		virtual void MoveSelectedBy(Vector3D offset);
 		virtual void RotateSelectedBy(Quaternion offset);
 		virtual void ScaleSelectedBy(Vector3D offset);

@@ -170,6 +170,12 @@ void BulletWrapperHelper::SetRotation(Quaternion rotation, uint index)
 	colObj->activate(true); // added activation mentioned in issue 6
 }
 
+string BulletWrapperHelper::GetShapeType(uint index)
+{
+	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+	return colObj->getCollisionShape()->getName();
+}
+
 string BulletWrapperHelper::GetName(uint index)
 {
 	return worldImporter->bodiesNames.at(index);

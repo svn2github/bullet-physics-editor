@@ -185,6 +185,32 @@ namespace CppCLI
 
 	#pragma endregion
 
+	String ^ OpenGLManipulatingController::Name::get()
+	{
+		//string BulletWrapperHelper::GetName(uint index)
+
+		if (selectedCount >0 && lastSelectedIndex >=0)
+			return model->GetName(lastSelectedIndex);
+		return "";
+	}
+
+	void OpenGLManipulatingController::Name::set( String ^ value)
+	{
+		if (selectedCount >0 && lastSelectedIndex >=0)
+			return model->SetName(value,lastSelectedIndex);
+	}
+
+
+	String ^ OpenGLManipulatingController::CollisionType::get()
+	{
+		if (selectedCount >0 && lastSelectedIndex >=0)
+			return model->GetShapeType(lastSelectedIndex);
+		return "";
+	}
+
+
+	
+
 	float OpenGLManipulatingController::GetSelectionValue(uint index, ManipulatorType manipulatorType)
 	{
 		switch (manipulatorType)

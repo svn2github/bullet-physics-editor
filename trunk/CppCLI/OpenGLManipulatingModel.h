@@ -28,6 +28,12 @@ namespace CppCLI
 		void DidSelect();
 
 		String^ GetName(uint index);
+		String^ GetShapeType(uint index);
+
+
+
+
+
 		void SetName(String^ name, uint index);
 	};
 

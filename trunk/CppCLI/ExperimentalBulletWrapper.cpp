@@ -137,6 +137,14 @@ namespace CppCLI
 		// ignored
 	}
 
+	
+
+	String ^ExperimentalBulletWrapper::GetShapeType(uint index)
+	{
+		return ManagedString(wrapper->GetShapeType(index));
+	}
+
+
 	String ^ExperimentalBulletWrapper::GetName(uint index)
 	{
 		return ManagedString(wrapper->GetName(index));

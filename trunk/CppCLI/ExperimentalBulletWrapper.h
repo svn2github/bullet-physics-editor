@@ -38,6 +38,7 @@ namespace CppCLI
 		virtual	void WillSelect();
 		virtual	void DidSelect();
 
+		virtual String^ GetShapeType(uint index);
 		virtual String^ GetName(uint index);
 		virtual void SetName(String^ name, uint index);
 
