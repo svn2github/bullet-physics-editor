@@ -185,6 +185,19 @@ namespace CppCLI
 
 	#pragma endregion
 
+	float  OpenGLManipulatingController::Mass::get()
+	{
+		if (selectedCount >0 && lastSelectedIndex >=0)
+			return model->GetMass(lastSelectedIndex);
+		return 0.f;
+	}
+//not yet
+//	void OpenGLManipulatingController::Mass::set(float value)
+//	{
+//		if (selectedCount >0 && lastSelectedIndex >=0)
+//			model->SetMass(value,lastSelectedIndex);
+//	}
+
 	String ^ OpenGLManipulatingController::Name::get()
 	{
 		//string BulletWrapperHelper::GetName(uint index)

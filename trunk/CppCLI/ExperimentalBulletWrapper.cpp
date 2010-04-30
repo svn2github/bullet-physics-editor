@@ -144,6 +144,16 @@ namespace CppCLI
 		return ManagedString(wrapper->GetShapeType(index));
 	}
 
+	
+	float ExperimentalBulletWrapper::GetMass(uint index)
+	{
+		return wrapper->GetMass(index);
+	}
+
+	void ExperimentalBulletWrapper::SetMass(float value, uint index)
+	{
+		wrapper->SetMass(value, index);
+	}
 
 	String ^ExperimentalBulletWrapper::GetName(uint index)
 	{

@@ -176,6 +176,29 @@ string BulletWrapperHelper::GetShapeType(uint index)
 	return colObj->getCollisionShape()->getName();
 }
 
+float BulletWrapperHelper::GetMass(uint index)
+{
+	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+	btRigidBody* body = btRigidBody::upcast(colObj);
+	if (body)
+	{
+		return body->getInvMass() ? 1./body->getInvMass() : 0.f;
+	}
+	return 0.f;
+}
+
+void BulletWrapperHelper::SetMass(float mass, uint index)
+{
+	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+	if (mass)
+	{
+//			colObj->getCollisionShape()->setM>getMass() ? 1./colObj->getCollisionShape()->getMass() : 0.f;
+	} else
+	{
+	}
+}
+
+
 string BulletWrapperHelper::GetName(uint index)
 {
 	return worldImporter->bodiesNames.at(index);

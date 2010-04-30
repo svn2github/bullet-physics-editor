@@ -72,6 +72,10 @@ namespace CppCLI
 		virtual property uint SelectedCount { uint get(); }
 
 		[Browsable(true)]
+		[CategoryAttribute("Rigid Body")]
+		virtual property float  Mass { float get();}// void set(float value); }
+
+		[Browsable(true)]
 		[CategoryAttribute("Collision Object")]
 		virtual property String ^ Name { String ^ get(); void set(String ^ value); }
 

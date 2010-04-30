@@ -39,6 +39,10 @@ namespace CppCLI
 		virtual	void DidSelect();
 
 		virtual String^ GetShapeType(uint index);
+
+		virtual float GetMass(uint index);
+		virtual void SetMass(float value, uint index);
+
 		virtual String^ GetName(uint index);
 		virtual void SetName(String^ name, uint index);
 

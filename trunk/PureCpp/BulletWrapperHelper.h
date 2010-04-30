@@ -42,6 +42,11 @@ public:
 	void SetRotation(Quaternion rotation, uint index);
 	
 	string GetShapeType(uint index);
+
+	float GetMass(uint index);
+	void SetMass(float value, uint index);
+
+
 	string GetName(uint index);
 	void SetName(string name, uint index);
 	

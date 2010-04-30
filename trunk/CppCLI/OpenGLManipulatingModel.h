@@ -30,11 +30,11 @@ namespace CppCLI
 		String^ GetName(uint index);
 		String^ GetShapeType(uint index);
 
-
-
-
-
 		void SetName(String^ name, uint index);
+
+		void	SetMass(float value,uint index);
+		float	GetMass(uint index);
+
 	};
 
 	public interface class OpenGLManipulatingModelMesh : OpenGLManipulatingModel
