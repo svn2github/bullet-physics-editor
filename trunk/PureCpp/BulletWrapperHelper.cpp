@@ -189,13 +189,14 @@ float BulletWrapperHelper::GetMass(uint index)
 
 void BulletWrapperHelper::SetMass(float mass, uint index)
 {
-	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
+/*	btCollisionObject *colObj = dynamicsWorld->getCollisionObjectArray()[index];
 	if (mass)
 	{
-//			colObj->getCollisionShape()->setM>getMass() ? 1./colObj->getCollisionShape()->getMass() : 0.f;
+			colObj->getCollisionShape()->setM>getMass() ? 1./colObj->getCollisionShape()->getMass() : 0.f;
 	} else
 	{
 	}
+ */
 }
 
 
