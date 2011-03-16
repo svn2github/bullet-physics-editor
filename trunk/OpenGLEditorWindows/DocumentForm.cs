@@ -39,8 +39,7 @@ namespace OpenGLEditorWindows
         DockPropertyPanel propertyPanel = null;
         DockGridPanel gridPanel = null;
         DockLogPanel logPanel = null;
-        DockTreePanel treePanel = null;
-
+        
         StringWriter logWriter;
 
         ExperimentalBulletWrapper bulletWrapper = null;
@@ -64,8 +63,7 @@ namespace OpenGLEditorWindows
             propertyPanel = new DockPropertyPanel();
             gridPanel = new DockGridPanel();
             logPanel = new DockLogPanel();
-            treePanel = new DockTreePanel();
-
+            
             openGLSceneViewLeft = fourViewDock.openGLSceneViewLeft;
             openGLSceneViewTop = fourViewDock.openGLSceneViewTop;
             openGLSceneViewFront = fourViewDock.openGLSceneViewFront;
@@ -117,8 +115,7 @@ namespace OpenGLEditorWindows
             propertyPanel.Show(dockPanel1);
             gridPanel.Show(dockPanel1);
             logPanel.Show(dockPanel1);
-            treePanel.Show(dockPanel1);
-
+            
             dockPanel1.DockLeftPortion = 0.15;   // 15 percent of dock space, 25 percent is default
             dockPanel1.DockRightPortion = 0.15;
 

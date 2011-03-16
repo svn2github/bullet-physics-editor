@@ -10,11 +10,5 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace OpenGLEditorWindows
 {
-    public partial class DockTreePanel : DockContent
-    {
-        public DockTreePanel()
-        {
-            InitializeComponent();
-        }
-    }
+   
 }
