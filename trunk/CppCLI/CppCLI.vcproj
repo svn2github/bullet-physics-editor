@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="CppCLI"
 	ProjectGUID="{6AD1C149-2969-4371-B74F-A50B9692A6CF}"
 	RootNamespace="ManagedCpp"
@@ -422,14 +422,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\bullet\src\BulletDynamics\Dynamics\btContinuousDynamicsWorld.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\bullet\src\BulletDynamics\Dynamics\btContinuousDynamicsWorld.h"
-					>
-				</File>
-				<File
 					RelativePath="..\bullet\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp"
 					>
 				</File>
@@ -818,6 +810,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Bullet\src\LinearMath\btConvexHullComputer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Bullet\src\LinearMath\btConvexHullComputer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\bullet\src\BulletCollision\CollisionShapes\btConvexHullShape.cpp"
 					>
 				</File>
@@ -851,6 +851,14 @@
 				</File>
 				<File
 					RelativePath="..\bullet\src\BulletCollision\CollisionShapes\btConvexPointCloudShape.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Bullet\src\BulletCollision\CollisionShapes\btConvexPolyhedron.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Bullet\src\BulletCollision\CollisionShapes\btConvexPolyhedron.h"
 					>
 				</File>
 				<File
@@ -1119,6 +1127,14 @@
 				</File>
 				<File
 					RelativePath="..\bullet\src\BulletCollision\NarrowPhaseCollision\btPointCollector.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Bullet\src\BulletCollision\NarrowPhaseCollision\btPolyhedralContactClipping.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Bullet\src\BulletCollision\NarrowPhaseCollision\btPolyhedralContactClipping.h"
 					>
 				</File>
 				<File
